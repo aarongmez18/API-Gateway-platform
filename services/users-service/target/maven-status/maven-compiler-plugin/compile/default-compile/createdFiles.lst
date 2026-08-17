@@ -1,0 +1,3 @@
+com\apigateway\users\UsersServiceApplication.class
+com\apigateway\users\controller\UserController.class
+com\apigateway\users\model\User.class
