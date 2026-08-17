@@ -1,0 +1,3 @@
+com\apigateway\products\controller\ProductController.class
+com\apigateway\products\model\Product.class
+com\apigateway\products\ProductsServiceApplication.class

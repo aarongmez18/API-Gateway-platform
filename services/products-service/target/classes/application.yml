@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: products-service
+
+server:
+  port: 8081
