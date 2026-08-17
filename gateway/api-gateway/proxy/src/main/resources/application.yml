@@ -1,0 +1,35 @@
+spring:
+  # Configuración general de la aplicación Spring Boot
+  application:
+    name: proxy
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          # Lista de rutas que va a gestionar el Gateway
+          routes:
+            # Identificador único de esta ruta
+            - id: jsonplaceholder
+              # API real a la que vamos a redirigir las peticiones
+              uri: https://jsonplaceholder.typicode.com
+              # Condiciones que debe cumplir una petición
+              # para que utilice esta ruta
+              predicates:
+                # Cualquier petición que empiece por /todos/
+                # será enviada a la API configurada arriba
+                #
+                # Ejemplo:
+                # localhost:9000/todos/1
+                #          ?
+                # https://jsonplaceholder.typicode.com/todos/1
+                - Path=/todos/**
+            - id: dummyjson
+              uri: https://dummyjson.com
+              predicates:
+                - Path=/products/**
+
+
+# Puerto donde estará escuchando nuestro Gateway
+server:
+  port: 9000
