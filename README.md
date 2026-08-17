@@ -1,2 +1,7 @@
-# API-Gateway-platform
-Plataforma de gestión de APIs con Angular, Spring Boot y Spring Cloud Gateway. Incluye routing, API Keys, permisos, rate limiting, métricas y monitorización.
+# API Gateway Platform
+
+Plataforma para gestionar y controlar el acceso a diferentes APIs mediante un API Gateway.
+
+## Objetivo
+
+Centralizar las peticiones hacia distintos servicios y permitir gestionar rutas, clientes, API Keys, permisos, límites de peticiones y métricas desde un dashboard Angular.
