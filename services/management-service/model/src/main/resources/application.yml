@@ -1,11 +1,14 @@
 spring:
+  config:
+    import: optional:classpath:application-local.properties
+
   application:
     name: model
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/gateway_platform
-    username: gateway
-    password: gateway
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
