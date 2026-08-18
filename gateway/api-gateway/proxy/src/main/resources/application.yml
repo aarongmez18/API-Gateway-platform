@@ -10,7 +10,7 @@ spring:
           # Lista de rutas que va a gestionar el Gateway
           routes:
             # Identificador único de esta ruta
-            - id: products
+            - id: api
               # API real a la que vamos a redirigir las peticiones
               uri: http://localhost:8081
               # Condiciones que debe cumplir una petición
@@ -23,7 +23,7 @@ spring:
                 # localhost:9000/todos/1
                 #          ?
                 # https://jsonplaceholder.typicode.com/todos/1
-                - Path=/products/**
+                - Path=/api-management/**
             - id: users
               uri: http://localhost:8082
               predicates:

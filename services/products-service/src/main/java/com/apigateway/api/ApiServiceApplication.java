@@ -1,12 +1,12 @@
-package com.apigateway.products;
+package com.apigateway.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProductsServiceApplication {
+public class ApiServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductsServiceApplication.class, args);
+        SpringApplication.run(ApiServiceApplication.class, args);
     }
 }

@@ -13,9 +13,9 @@
     </parent>
 
     <groupId>com.apigateway</groupId>
-    <artifactId>products-service</artifactId>
+    <artifactId>api-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>products-service</name>
+    <name>api-service</name>
     <description>Products API for API Gateway Platform</description>
 
     <properties>
@@ -23,6 +23,32 @@
     </properties>
 
     <dependencies>
+
+        <!-- JPA: entidades, repositorios, persistencia -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Validaciones en DTOs -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.3</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -47,6 +73,23 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+
+                <configuration>
+                    <annotationProcessorPaths>
+
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>1.6.3</version>
+                        </path>
+
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>

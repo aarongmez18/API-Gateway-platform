@@ -1,3 +1,10 @@
-C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\products\controller\ProductController.java
-C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\products\model\Product.java
-C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\products\ProductsServiceApplication.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\ApiServiceApplication.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\controller\ApiController.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\dto\ApiRequestDTO.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\dto\ApiResponseDTO.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\logic\ApiService.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\mapper\ApiMapper.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\model\Api.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\model\General.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\repository\ApiRepositoryImpl.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\repository\repositoryInterfaces\ApiRepository.java
