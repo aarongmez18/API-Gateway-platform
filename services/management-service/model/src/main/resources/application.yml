@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: model
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gateway_platform
+    username: gateway
+    password: gateway
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  port: 8083
