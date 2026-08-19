@@ -1,1 +1,8 @@
-com\apigateway\users\UsersServiceApplicationTests.class
+com\apigateway\users\controller\ClientControllerTest.class
+com\apigateway\users\controller\HealthControllerTest.class
+com\apigateway\users\logic\ApiKeyServiceTest.class
+com\apigateway\users\controller\ApiKeyControllerTest.class
+com\apigateway\users\repository\ApiKeyRepositoryImplTest.class
+com\apigateway\users\logic\ClientServiceTest.class
+com\apigateway\users\exception\GlobalExceptionHandlerTest.class
+com\apigateway\users\repository\ClientRepositoryImplTest.class

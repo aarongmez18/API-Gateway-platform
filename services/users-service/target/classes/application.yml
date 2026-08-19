@@ -2,5 +2,19 @@ spring:
   application:
     name: users-service
 
+  config:
+    import: optional:classpath:application-local.properties
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
 server:
   port: 8082
+  servlet:
+    context-path: /users-management

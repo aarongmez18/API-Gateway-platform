@@ -4,6 +4,7 @@ import com.apigateway.users.dto.request.ApiKeyRequestDTO;
 import com.apigateway.users.dto.response.ApiKeyResponseDTO;
 import com.apigateway.users.exception.ApiKeyNotFoundException;
 import com.apigateway.users.exception.ClientNotFoundException;
+import com.apigateway.users.mapper.ApiKeyMapper;
 import com.apigateway.users.model.ApiKey;
 import com.apigateway.users.model.Client;
 import com.apigateway.users.repository.repositoryInterfaces.ApiKeyRepository;
