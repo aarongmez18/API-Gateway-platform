@@ -1,10 +1,14 @@
 package com.apigateway.api.logic;
 
+import com.apigateway.api.controller.ApiController;
 import com.apigateway.api.dto.ApiResponseDTO;
 import com.apigateway.api.dto.ApiRequestDTO;
+import com.apigateway.api.exception.ApiNotFoundException;
 import com.apigateway.api.mapper.ApiMapper;
 import com.apigateway.api.model.Api;
 import com.apigateway.api.repository.repositoryInterfaces.ApiRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +16,10 @@ import java.util.List;
 @Service
 public class ApiService {
 
-    private final ApiRepository repository;
     private final ApiMapper mapper;
+    private final ApiRepository repository;
+
+    private static final Logger LOG = LoggerFactory.getLogger(ApiService.class);
 
     public ApiService(ApiRepository repository, ApiMapper mapper) {
         this.repository = repository;
@@ -22,6 +28,7 @@ public class ApiService {
 
 
     public List<ApiResponseDTO> findAll() {
+        LOG.info("ENTRY -- ApiService -- findAll");
         return repository.findAll()
                 .stream()
                 .map(mapper::toDto)
@@ -30,41 +37,44 @@ public class ApiService {
 
 
     public ApiResponseDTO findById(Long id) {
-        Api api = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("API no encontrada: " + id)
-                );
-
+        LOG.info("ENTRY -- ApiService -- findById");
+        Api api = repository.findById(id).orElseThrow(() -> new ApiNotFoundException(id));
+        LOG.info("OK -- ApiService -- findById");
         return mapper.toDto(api);
     }
 
 
     public ApiResponseDTO create(ApiRequestDTO dto) {
+        LOG.info("ENTRY -- ApiService -- create");
         Api api = mapper.toEntity(dto);
         Api saved = repository.save(api);
+        LOG.info("OK -- ApiService -- create");
         return mapper.toDto(saved);
     }
 
 
     public ApiResponseDTO update(Long id, ApiRequestDTO dto) {
-        Api api = repository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("API no encontrada: " + id)
-                );
+        LOG.info("ENTRY -- ApiService -- update");
+        Api api = repository.findById(id).orElseThrow(() -> new ApiNotFoundException(id));
+        LOG.info("OK -- ApiService -- update");
 
         mapper.updateEntity(dto, api);
         Api updated = repository.save(api);
+        LOG.info("SAVING OK -- ApiService -- update");
         return mapper.toDto(updated);
     }
 
 
     public void delete(Long id) {
+        LOG.info("ENTRY -- ApiService -- delete");
+
         if (!repository.existsById(id)) {
-            throw new RuntimeException(
-                    "API no encontrada: " + id
-            );
+            LOG.warn("ID no found -- ApiService -- delete -- id={}", id);
+            throw new ApiNotFoundException(id);
         }
 
         repository.deleteById(id);
+
+        LOG.info("OK -- ApiService -- delete -- id={}", id);
     }
 }

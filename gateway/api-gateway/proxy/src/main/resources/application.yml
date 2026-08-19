@@ -27,11 +27,11 @@ spring:
             - id: users
               uri: http://localhost:8082
               predicates:
-                - Path=/users/**
+                - Path=/users-management/**
             - id: model
               uri: http://localhost:8083
               predicates:
-              - Path=/api/model/**
+              - Path=/model-management/api/model/**
 
 
 # Puerto donde estará escuchando nuestro Gateway

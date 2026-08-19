@@ -1,11 +1,15 @@
+com\apigateway\api\controller\HealthController.class
 com\apigateway\api\ApiServiceApplication.class
+com\apigateway\api\exception\ApiNotFoundException.class
 com\apigateway\api\model\Api.class
 com\apigateway\api\dto\ApiRequestDTO.class
+com\apigateway\api\exception\GlobalExceptionHandler.class
 com\apigateway\api\mapper\ApiMapper.class
 com\apigateway\api\mapper\ApiMapperImpl.class
 com\apigateway\api\repository\repositoryInterfaces\ApiRepository.class
 com\apigateway\api\model\General.class
 com\apigateway\api\repository\ApiRepositoryImpl.class
 com\apigateway\api\logic\ApiService.class
+com\apigateway\api\dto\ErrorResponseDTO.class
 com\apigateway\api\controller\ApiController.class
 com\apigateway\api\dto\ApiResponseDTO.class

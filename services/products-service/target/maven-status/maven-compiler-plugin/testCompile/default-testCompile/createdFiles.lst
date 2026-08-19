@@ -1,1 +1,6 @@
+com\apigateway\api\controller\ApiControllerTest.class
+com\apigateway\api\controller\HealthControllerTest.class
+com\apigateway\api\logic\ApiServiceTest.class
 com\apigateway\api\ApiServiceApplicationTests.class
+com\apigateway\api\repository\ApiRepositoryImplTest.class
+com\apigateway\api\exception\GlobalExceptionHandlerTest.class

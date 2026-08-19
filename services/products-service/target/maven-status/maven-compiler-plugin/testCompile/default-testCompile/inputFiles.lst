@@ -1,1 +1,6 @@
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\test\java\com\apigateway\api\ApiServiceApplicationTests.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\test\java\com\apigateway\api\controller\ApiControllerTest.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\test\java\com\apigateway\api\controller\HealthControllerTest.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\test\java\com\apigateway\api\exception\GlobalExceptionHandlerTest.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\test\java\com\apigateway\api\logic\ApiServiceTest.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\test\java\com\apigateway\api\repository\ApiRepositoryImplTest.java

@@ -1,7 +1,11 @@
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\ApiServiceApplication.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\controller\ApiController.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\controller\HealthController.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\dto\ApiRequestDTO.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\dto\ApiResponseDTO.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\dto\ErrorResponseDTO.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\exception\ApiNotFoundException.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\exception\GlobalExceptionHandler.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\logic\ApiService.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\mapper\ApiMapper.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\products-service\src\main\java\com\apigateway\api\model\Api.java
