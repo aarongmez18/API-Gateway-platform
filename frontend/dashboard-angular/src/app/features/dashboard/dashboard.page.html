@@ -1,0 +1,61 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">Control plane / overview</span>
+      <h1>Dashboard</h1>
+      <p>Visión operativa de las APIs, clientes y credenciales registradas en la plataforma.</p>
+    </div>
+    <button class="btn" type="button" (click)="load()">↻ Actualizar</button>
+  </header>
+
+  @if (error()) {
+    <div class="notice">{{ error() }}</div>
+  }
+
+  <div class="stats-grid">
+    <app-stat-card label="APIs registradas" [value]="apis().length" [helper]="activeApis() + ' activas'" />
+    <app-stat-card label="Clientes" [value]="clients().length" [helper]="activeClients() + ' activos'" />
+    <app-stat-card label="API Keys" [value]="apiKeyCount()" helper="credenciales registradas" />
+    <app-stat-card label="Gateway" value="UP" helper="localhost:9000" />
+  </div>
+
+  <div class="dashboard-grid">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>APIs recientes</h2>
+        <span>{{ apis().length }} total</span>
+      </div>
+      @if (loading()) {
+        <div class="loading">Cargando APIs...</div>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>API</th><th>Path</th><th>Estado</th></tr></thead>
+            <tbody>
+              @for (api of apis().slice(0, 6); track api.id) {
+                <tr>
+                  <td><span class="cell-primary">{{ api.name }}</span><span class="cell-secondary">#{{ api.id }}</span></td>
+                  <td class="mono">{{ api.path }}</td>
+                  <td><span class="badge" [class.active]="api.active" [class.inactive]="!api.active">{{ api.active ? 'Activa' : 'Inactiva' }}</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <section class="panel topology">
+      <div class="panel-head"><h2>Topología</h2><span>local</span></div>
+      <div class="topology-body">
+        <div class="node gateway-node"><small>ENTRY</small><strong>Gateway</strong><span>:9000</span></div>
+        <div class="connector"></div>
+        <div class="node-grid">
+          <div class="node"><small>SERVICE</small><strong>api-service</strong><span>:8081</span></div>
+          <div class="node"><small>SERVICE</small><strong>users-service</strong><span>:8082</span></div>
+          <div class="node"><small>DATABASE</small><strong>PostgreSQL</strong><span>:5432</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

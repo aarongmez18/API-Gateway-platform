@@ -1,0 +1,74 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">API Management</span>
+      <h1>APIs</h1>
+      <p>Registra y administra los destinos que utilizará la plataforma Gateway.</p>
+    </div>
+    <button class="btn btn-primary" type="button" (click)="openCreate()">＋ Registrar API</button>
+  </header>
+
+  @if (error()) { <div class="notice">{{ error() }}</div> }
+
+  <section class="panel">
+    <div class="panel-head">
+      <div class="toolbar">
+        <input
+          class="search"
+          type="search"
+          placeholder="Buscar por nombre, path o URL..."
+          [value]="query()"
+          (input)="query.set($any($event.target).value)" />
+      </div>
+      <span>{{ filteredApis().length }} resultados</span>
+    </div>
+
+    @if (loading()) {
+      <div class="loading">Cargando APIs...</div>
+    } @else if (filteredApis().length === 0) {
+      <div class="panel-body">
+        <app-empty-state title="No hay APIs" text="Registra una API para comenzar a enrutar tráfico desde el Gateway." />
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>API</th><th>Target URL</th><th>Path</th><th>Estado</th><th class="hide-mobile">Creada</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (api of filteredApis(); track api.id) {
+              <tr>
+                <td><span class="cell-primary">{{ api.name }}</span><span class="cell-secondary">ID {{ api.id }}</span></td>
+                <td class="mono">{{ api.targetUrl }}</td>
+                <td class="mono">{{ api.path }}</td>
+                <td><span class="badge" [class.active]="api.active" [class.inactive]="!api.active">{{ api.active ? 'Activa' : 'Inactiva' }}</span></td>
+                <td class="hide-mobile">{{ api.createdAt || '—' }}</td>
+                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(api)" title="Editar">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="delete(api)" title="Eliminar">×</button></div></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</section>
+
+@if (drawerOpen()) {
+  <div class="drawer-backdrop" (click)="closeDrawer()">
+    <aside class="drawer" (click)="$event.stopPropagation()">
+      <div class="drawer-head">
+        <div><span class="eyebrow">{{ editingId() === null ? 'Nueva API' : 'Editar API' }}</span><h2>{{ editingId() === null ? 'Registrar API' : 'Actualizar API' }}</h2></div>
+        <button class="btn btn-ghost btn-icon" type="button" (click)="closeDrawer()">×</button>
+      </div>
+      <form class="drawer-body" [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-grid">
+          <div class="field"><label>Nombre</label><input formControlName="name" placeholder="Products API" /><small>Nombre reconocible dentro de la plataforma.</small></div>
+          <div class="field"><label>Target URL</label><input formControlName="targetUrl" placeholder="http://localhost:8085" /><small>Servicio real al que enviará tráfico el Gateway.</small></div>
+          <div class="field"><label>Path</label><input formControlName="path" placeholder="/products/**" /><small>Patrón público que identificará esta API.</small></div>
+          <label class="check-row"><input type="checkbox" formControlName="active" /> API activa</label>
+        </div>
+        <div class="form-actions"><button class="btn" type="button" (click)="closeDrawer()">Cancelar</button><button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Guardando...' : 'Guardar API' }}</button></div>
+      </form>
+    </aside>
+  </div>
+}

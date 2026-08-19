@@ -1,0 +1,52 @@
+<section class="page">
+  <header class="page-header">
+    <div><span class="eyebrow">Identity / consumers</span><h1>Clientes</h1><p>Gestiona las aplicaciones y consumidores autorizados a utilizar la plataforma.</p></div>
+    <button class="btn btn-primary" type="button" (click)="openCreate()">＋ Nuevo cliente</button>
+  </header>
+
+  @if (error()) { <div class="notice">{{ error() }}</div> }
+
+  <section class="panel">
+    <div class="panel-head">
+      <input class="search" type="search" placeholder="Buscar cliente..." [value]="query()" (input)="query.set($any($event.target).value)" />
+      <span>{{ filteredClients().length }} clientes</span>
+    </div>
+
+    @if (loading()) {
+      <div class="loading">Cargando clientes...</div>
+    } @else if (filteredClients().length === 0) {
+      <div class="panel-body"><app-empty-state title="No hay clientes" text="Crea el primer cliente para poder asignarle credenciales de acceso." /></div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cliente</th><th>Estado</th><th class="hide-mobile">Creado</th><th></th></tr></thead>
+          <tbody>
+            @for (client of filteredClients(); track client.id) {
+              <tr>
+                <td><span class="cell-primary">{{ client.name }}</span><span class="cell-secondary">ID {{ client.id }}</span></td>
+                <td><span class="badge" [class.active]="client.active" [class.inactive]="!client.active">{{ client.active ? 'Activo' : 'Inactivo' }}</span></td>
+                <td class="hide-mobile">{{ client.createdAt || '—' }}</td>
+                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(client)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="delete(client)">×</button></div></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</section>
+
+@if (drawerOpen()) {
+  <div class="drawer-backdrop" (click)="closeDrawer()">
+    <aside class="drawer" (click)="$event.stopPropagation()">
+      <div class="drawer-head"><div><span class="eyebrow">Cliente</span><h2>{{ editingId() === null ? 'Crear cliente' : 'Editar cliente' }}</h2></div><button class="btn btn-ghost btn-icon" (click)="closeDrawer()">×</button></div>
+      <form class="drawer-body" [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-grid">
+          <div class="field"><label>Nombre</label><input formControlName="name" placeholder="Mobile App" /><small>Nombre de la aplicación, partner o consumidor.</small></div>
+          <label class="check-row"><input type="checkbox" formControlName="active" /> Cliente activo</label>
+        </div>
+        <div class="form-actions"><button class="btn" type="button" (click)="closeDrawer()">Cancelar</button><button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Guardando...' : 'Guardar cliente' }}</button></div>
+      </form>
+    </aside>
+  </div>
+}

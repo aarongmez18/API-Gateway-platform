@@ -1,0 +1,18 @@
+.request-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--border); background: rgba(255,255,255,.018); }
+.request-stats > div { padding: 15px 18px; display: flex; align-items: center; justify-content: space-between; border-right: 1px solid var(--border); }
+.request-stats > div:last-child { border-right: 0; }
+.request-stats span { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+.request-stats strong { font-size: 17px; }
+.method-filter { display: flex; gap: 3px; }
+.method-btn { height: 28px; padding: 0 9px; border: 1px solid transparent; background: transparent; color: #777; cursor: pointer; font-size: 9px; font-weight: 800; }
+.method-btn:hover, .method-btn.selected { color: #eee; border-color: var(--border); background: rgba(255,255,255,.045); }
+.method-tag { font-family: monospace; font-size: 10px; font-weight: 800; color: #aaa; }
+.method-tag[data-method='POST'] { color: #8bdcb0; }
+.method-tag[data-method='PUT'] { color: #e8c47a; }
+.method-tag[data-method='DELETE'] { color: #ff9d9d; }
+
+@media (max-width: 640px) {
+  .request-stats { grid-template-columns: 1fr; }
+  .request-stats > div { border-right: 0; border-bottom: 1px solid var(--border); }
+  .request-stats > div:last-child { border-bottom: 0; }
+}

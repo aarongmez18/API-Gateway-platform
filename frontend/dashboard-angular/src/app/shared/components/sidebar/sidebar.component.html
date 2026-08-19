@@ -1,0 +1,29 @@
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-mark">G</div>
+    <div>
+      <strong>Gateway Control</strong>
+      <span>Platform Console</span>
+    </div>
+  </div>
+
+  <nav class="nav" aria-label="Navegación principal">
+    @for (item of items; track item.route) {
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item">
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="status-dot"></span>
+    <div>
+      <strong>Gateway</strong>
+      <small>localhost:9000</small>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,12 @@
+{
+  "/api-management/**": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/users-management/**": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

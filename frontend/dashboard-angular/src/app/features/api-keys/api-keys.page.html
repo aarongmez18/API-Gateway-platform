@@ -1,0 +1,50 @@
+<section class="page">
+  <header class="page-header">
+    <div><span class="eyebrow">Security / credentials</span><h1>API Keys</h1><p>Administra las credenciales asociadas a los clientes consumidores del Gateway.</p></div>
+    <button class="btn btn-primary" type="button" (click)="openCreate()" [disabled]="clients().length === 0">＋ Generar API Key</button>
+  </header>
+
+  @if (error()) { <div class="notice">{{ error() }}</div> }
+
+  <section class="panel">
+    <div class="panel-head"><input class="search" type="search" placeholder="Buscar por cliente o ID..." [value]="query()" (input)="query.set($any($event.target).value)" /><span>{{ filteredApiKeys().length }} claves</span></div>
+
+    @if (loading()) {
+      <div class="loading">Cargando API Keys...</div>
+    } @else if (filteredApiKeys().length === 0) {
+      <div class="panel-body"><app-empty-state title="No hay API Keys" text="Genera una credencial para un cliente existente." /></div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>API Key</th><th>Cliente</th><th>Estado</th><th class="hide-mobile">Creada</th><th></th></tr></thead>
+          <tbody>
+            @for (key of filteredApiKeys(); track key.id) {
+              <tr>
+                <td><span class="cell-primary">KEY-{{ key.id }}</span><span class="cell-secondary">Hash protegido en backend</span></td>
+                <td><span class="cell-primary">{{ key.clientName }}</span><span class="cell-secondary">Client {{ key.clientId }}</span></td>
+                <td><span class="badge" [class.active]="key.active" [class.inactive]="!key.active">{{ key.active ? 'Activa' : 'Inactiva' }}</span></td>
+                <td class="hide-mobile">{{ key.createdAt || '—' }}</td>
+                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(key)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="delete(key)">×</button></div></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</section>
+
+@if (drawerOpen()) {
+  <div class="drawer-backdrop" (click)="closeDrawer()">
+    <aside class="drawer" (click)="$event.stopPropagation()">
+      <div class="drawer-head"><div><span class="eyebrow">Credential</span><h2>{{ editingId() === null ? 'Generar API Key' : 'Editar API Key' }}</h2></div><button class="btn btn-ghost btn-icon" (click)="closeDrawer()">×</button></div>
+      <form class="drawer-body" [formGroup]="form" (ngSubmit)="save()">
+        <div class="form-grid">
+          <div class="field"><label>Cliente</label><select formControlName="clientId">@for (client of clients(); track client.id) { <option [ngValue]="client.id">{{ client.name }} · #{{ client.id }}</option> }</select><small>La API Key quedará asociada a este cliente.</small></div>
+          <label class="check-row"><input type="checkbox" formControlName="active" /> API Key activa</label>
+        </div>
+        <div class="form-actions"><button class="btn" type="button" (click)="closeDrawer()">Cancelar</button><button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Guardando...' : (editingId() === null ? 'Generar clave' : 'Guardar cambios') }}</button></div>
+      </form>
+    </aside>
+  </div>
+}

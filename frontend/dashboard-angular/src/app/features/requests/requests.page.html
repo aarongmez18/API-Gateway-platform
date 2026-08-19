@@ -1,0 +1,54 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">Observability / frontend session</span>
+      <h1>Peticiones</h1>
+      <p>Actividad HTTP realizada desde esta interfaz contra el Gateway durante la sesión actual.</p>
+    </div>
+    <button class="btn" type="button" (click)="activity.clear()" [disabled]="activity.total() === 0">Limpiar actividad</button>
+  </header>
+
+  <div class="request-stats">
+    <div><span>Total</span><strong>{{ activity.total() }}</strong></div>
+    <div><span>Pendientes</span><strong>{{ activity.pending() }}</strong></div>
+    <div><span>Errores</span><strong>{{ activity.errors() }}</strong></div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div class="method-filter">
+        @for (item of ['ALL', 'GET', 'POST', 'PUT', 'DELETE']; track item) {
+          <button class="method-btn" [class.selected]="method() === item" (click)="method.set(item)">{{ item }}</button>
+        }
+      </div>
+      <span>Máximo 100 registros</span>
+    </div>
+
+    @if (requests().length === 0) {
+      <div class="panel-body">
+        <app-empty-state title="Sin peticiones registradas" text="Navega por APIs, Clientes o API Keys. Las llamadas al Gateway aparecerán aquí automáticamente." />
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Método</th><th>Endpoint</th><th>Estado</th><th>Duración</th><th class="hide-mobile">Hora</th></tr></thead>
+          <tbody>
+            @for (request of requests(); track request.id) {
+              <tr>
+                <td><span class="method-tag" [attr.data-method]="request.method">{{ request.method }}</span></td>
+                <td class="mono">{{ request.endpoint }}</td>
+                <td>
+                  <span class="badge" [class.active]="request.state === 'success'" [class.error]="request.state === 'error'" [class.pending]="request.state === 'pending'">
+                    {{ request.status ?? '...' }}
+                  </span>
+                </td>
+                <td class="mono">{{ request.durationMs === null ? '—' : request.durationMs + ' ms' }}</td>
+                <td class="hide-mobile">{{ request.startedAt | date:'HH:mm:ss' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</section>
