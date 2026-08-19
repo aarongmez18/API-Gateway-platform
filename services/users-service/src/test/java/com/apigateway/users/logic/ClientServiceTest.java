@@ -5,6 +5,7 @@ import com.apigateway.users.dto.response.ClientResponseDTO;
 import com.apigateway.users.exception.ClientNotFoundException;
 import com.apigateway.users.mapper.ClientMapper;
 import com.apigateway.users.model.Client;
+import com.apigateway.users.repository.repositoryInterfaces.ApiKeyRepository;
 import com.apigateway.users.repository.repositoryInterfaces.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,18 @@ class ClientServiceTest {
     private ClientRepository repository;
 
     @Mock
+    private ApiKeyRepository apiKeyRepository;
+
+    @Mock
     private ClientMapper mapper;
 
     private ClientService service;
 
+
+
     @BeforeEach
     void setUp() {
-        service = new ClientService(repository, mapper);
+        service = new ClientService(repository, apiKeyRepository, mapper);
     }
 
     @Test

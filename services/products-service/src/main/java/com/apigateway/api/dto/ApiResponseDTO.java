@@ -1,5 +1,7 @@
 package com.apigateway.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public class ApiResponseDTO {
@@ -9,6 +11,8 @@ public class ApiResponseDTO {
     private String targetUrl;
     private String path;
     private Boolean active;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDateTime createdAt;
 
     public Long getId() {

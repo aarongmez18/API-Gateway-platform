@@ -50,6 +50,23 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(ClientHasApiKeysException.class)
+    public ResponseEntity<ErrorResponseDTO> handleClientHasApiKeys(
+            ClientHasApiKeysException ex) {
+
+        LOG.warn("No se puede eliminar cliente: {}", ex.getMessage());
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleException(
             Exception ex) {

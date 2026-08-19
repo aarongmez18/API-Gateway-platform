@@ -2,9 +2,11 @@ package com.apigateway.users.logic;
 
 import com.apigateway.users.dto.request.ClientRequestDTO;
 import com.apigateway.users.dto.response.ClientResponseDTO;
+import com.apigateway.users.exception.ClientHasApiKeysException;
 import com.apigateway.users.exception.ClientNotFoundException;
 import com.apigateway.users.mapper.ClientMapper;
 import com.apigateway.users.model.Client;
+import com.apigateway.users.repository.repositoryInterfaces.ApiKeyRepository;
 import com.apigateway.users.repository.repositoryInterfaces.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +20,16 @@ public class ClientService {
     private static final Logger LOG = LoggerFactory.getLogger(ClientService.class);
 
     private final ClientRepository repository;
+    private final ApiKeyRepository apiKeyRepository;
     private final ClientMapper mapper;
 
-    public ClientService(ClientRepository repository, ClientMapper mapper) {
+    public ClientService(
+            ClientRepository repository,
+            ApiKeyRepository apiKeyRepository,
+            ClientMapper mapper) {
+
         this.repository = repository;
+        this.apiKeyRepository = apiKeyRepository;
         this.mapper = mapper;
     }
 
@@ -67,6 +75,7 @@ public class ClientService {
     }
 
     public void delete(Long id) {
+
         LOG.info("ENTRY -- ClientService -- delete -- id={}", id);
 
         if (!repository.existsById(id)) {
@@ -74,7 +83,13 @@ public class ClientService {
             throw new ClientNotFoundException(id);
         }
 
+        if (apiKeyRepository.existsByClientId(id)) {
+            LOG.warn("Cliente con API Keys asociadas -- ClientService -- delete -- id={}", id);
+            throw new ClientHasApiKeysException(id);
+        }
+
         repository.deleteById(id);
+
         LOG.info("OK -- ClientService -- delete -- id={}", id);
     }
 }

@@ -65,6 +65,20 @@ public class ApiKeyRepositoryImpl implements ApiKeyRepository {
     }
 
     @Override
+    public boolean existsByClientId(Long clientId) {
+
+        Long count = entityManager
+                .createQuery(
+                        "SELECT COUNT(a) FROM ApiKey a WHERE a.client.id = :clientId",
+                        Long.class
+                )
+                .setParameter("clientId", clientId)
+                .getSingleResult();
+
+        return count > 0;
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return entityManager.find(ApiKey.class, id) != null;
     }

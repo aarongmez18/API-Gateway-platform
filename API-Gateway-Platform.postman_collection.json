@@ -1,0 +1,264 @@
+{
+  "info": {
+    "_postman_id": "8d7c4b5e-3c7d-4b76-9b1f-7c1bff73e9d1",
+    "name": "API Gateway Platform",
+    "description": "Colección para probar Clients, API Keys y APIs a través del Gateway.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:9000"
+    },
+    {
+      "key": "clientId",
+      "value": "1"
+    },
+    {
+      "key": "apiKeyId",
+      "value": "1"
+    },
+    {
+      "key": "apiId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "GET - Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/clients"
+          }
+        },
+        {
+          "name": "GET - Cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/clients/{{clientId}}"
+          }
+        },
+        {
+          "name": "POST - Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{gatewayUrl}}/users-management/clients",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Client\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.id) pm.collectionVariables.set('clientId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT - Actualizar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{gatewayUrl}}/users-management/clients/{{clientId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Client Modificado\",\n  \"active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/clients/{{clientId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Keys",
+      "item": [
+        {
+          "name": "GET - Listar API Keys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/api-keys"
+          }
+        },
+        {
+          "name": "GET - API Key por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/api-keys/{{apiKeyId}}"
+          }
+        },
+        {
+          "name": "GET - API Keys por Client ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/api-keys/client/{{clientId}}"
+          }
+        },
+        {
+          "name": "POST - Crear API Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{gatewayUrl}}/users-management/api-keys",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": {{clientId}},\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.id) pm.collectionVariables.set('apiKeyId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT - Actualizar API Key",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{gatewayUrl}}/users-management/api-keys/{{apiKeyId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": {{clientId}},\n  \"active\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar API Key",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{gatewayUrl}}/users-management/api-keys/{{apiKeyId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "APIs",
+      "item": [
+        {
+          "name": "GET - Listar APIs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/api-management/apis"
+          }
+        },
+        {
+          "name": "GET - API por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{gatewayUrl}}/api-management/apis/{{apiId}}"
+          }
+        },
+        {
+          "name": "POST - Crear API",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{gatewayUrl}}/api-management/apis",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Products API\",\n  \"targetUrl\": \"http://localhost:8085\",\n  \"path\": \"/products/**\",\n  \"active\": true\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.id) pm.collectionVariables.set('apiId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT - Actualizar API",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{gatewayUrl}}/api-management/apis/{{apiId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Products API V2\",\n  \"targetUrl\": \"http://localhost:8086\",\n  \"path\": \"/products/**\",\n  \"active\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar API",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{gatewayUrl}}/api-management/apis/{{apiId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

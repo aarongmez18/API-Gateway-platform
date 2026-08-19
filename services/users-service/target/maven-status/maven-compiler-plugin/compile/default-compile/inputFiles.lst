@@ -7,6 +7,7 @@ C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java
 C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\dto\response\ClientResponseDTO.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\dto\response\ErrorResponseDTO.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\exception\ApiKeyNotFoundException.java
+C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\exception\ClientHasApiKeysException.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\exception\ClientNotFoundException.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\exception\GlobalExceptionHandler.java
 C:\Users\gabri\Desktop\api-gateway-platform\services\users-service\src\main\java\com\apigateway\users\logic\ApiKeyService.java

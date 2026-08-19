@@ -16,6 +16,7 @@ com\apigateway\users\model\General.class
 com\apigateway\users\repository\repositoryInterfaces\ClientRepository.class
 com\apigateway\users\repository\ApiKeyRepositoryImpl.class
 com\apigateway\users\dto\request\ApiKeyRequestDTO.class
+com\apigateway\users\exception\ClientHasApiKeysException.class
 com\apigateway\users\logic\ApiKeyService.class
 com\apigateway\users\controller\ClientController.class
 com\apigateway\users\mapper\ClientMapper.class
