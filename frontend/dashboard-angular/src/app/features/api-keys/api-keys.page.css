@@ -1,1 +1,411 @@
-:host { display: block; }
+:host {
+  display: block;
+}
+
+
+/* =========================================================
+   API KEY CREATED DIALOG
+   ========================================================= */
+
+.credential-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+
+  display: grid;
+  place-items: center;
+
+  padding: 24px;
+
+  background: rgba(0, 0, 0, .76);
+  backdrop-filter: blur(5px);
+}
+
+
+.credential-dialog {
+  width: min(680px, 100%);
+
+  background: #111;
+  border: 1px solid var(--border-strong);
+
+  box-shadow:
+    0 32px 100px rgba(0, 0, 0, .6),
+    0 0 0 1px rgba(255, 255, 255, .02);
+}
+
+
+/* Header */
+
+.credential-header {
+  min-height: 82px;
+
+  padding: 18px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.credential-header h2 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 18px;
+  font-weight: 650;
+
+  letter-spacing: -.02em;
+}
+
+.credential-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  flex-shrink: 0;
+
+  color: var(--success);
+
+  font-size: 10px;
+  font-weight: 650;
+
+  letter-spacing: .04em;
+}
+
+.credential-status::before {
+  content: '';
+
+  width: 6px;
+  height: 6px;
+
+  background: var(--success);
+}
+
+
+/* Body */
+
+.credential-body {
+  display: grid;
+  gap: 24px;
+
+  padding: 22px;
+}
+
+
+/* Warning */
+
+.credential-warning {
+  padding: 14px 16px;
+
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+
+  border: 1px solid rgba(232, 196, 122, .18);
+  background: rgba(232, 196, 122, .045);
+}
+
+.credential-warning-icon {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(232, 196, 122, .35);
+
+  color: var(--warning);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.credential-warning strong {
+  display: block;
+
+  margin: 1px 0 5px;
+
+  color: #e8d4a9;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.credential-warning p {
+  margin: 0;
+
+  max-width: 560px;
+
+  color: #93866c;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* Metadata */
+
+.credential-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  border: 1px solid var(--border);
+}
+
+.credential-meta-item {
+  min-width: 0;
+
+  padding: 13px 14px;
+
+  display: grid;
+  gap: 5px;
+}
+
+.credential-meta-item + .credential-meta-item {
+  border-left: 1px solid var(--border);
+}
+
+.credential-meta-item span {
+  color: #666;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.credential-meta-item strong {
+  overflow: hidden;
+
+  color: #d7d7d7;
+
+  font-size: 11px;
+  font-weight: 620;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.credential-meta-item .credential-active {
+  color: var(--success);
+}
+
+
+/* API key */
+
+.credential-key-section {
+  display: grid;
+  gap: 9px;
+}
+
+.credential-key-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.credential-key-label label {
+  color: #aaa;
+
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.credential-key-label span {
+  color: #606060;
+
+  font-size: 9px;
+
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.credential-key-box {
+  min-height: 54px;
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  border: 1px solid var(--border-strong);
+  background: #0a0a0a;
+}
+
+.credential-key-box:focus-within {
+  border-color: rgba(255, 255, 255, .28);
+}
+
+.credential-key-box code {
+  min-width: 0;
+
+  padding: 17px 16px;
+
+  display: block;
+
+  overflow-x: auto;
+
+  color: #ddd;
+
+  font-family:
+    "SFMono-Regular",
+    Consolas,
+    "Liberation Mono",
+    monospace;
+
+  font-size: 11px;
+  line-height: 18px;
+
+  white-space: nowrap;
+
+  user-select: all;
+}
+
+.credential-copy {
+  min-width: 104px;
+
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 0;
+  border-left: 1px solid var(--border-strong);
+
+  background: rgba(255, 255, 255, .055);
+
+  color: #c8c8c8;
+
+  cursor: pointer;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  transition:
+    background .15s ease,
+    color .15s ease;
+}
+
+.credential-copy:hover {
+  background: rgba(255, 255, 255, .11);
+  color: #fff;
+}
+
+.credential-copy:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, .6);
+  outline-offset: -3px;
+}
+
+.credential-copy.copied {
+  color: var(--success);
+  background: rgba(126, 226, 168, .055);
+}
+
+.copy-icon {
+  font-size: 13px;
+}
+
+.credential-copy-feedback {
+  min-height: 16px;
+
+  margin: 0;
+
+  color: #626262;
+
+  font-size: 10px;
+}
+
+
+/* Footer */
+
+.credential-footer {
+  min-height: 72px;
+
+  padding: 16px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  border-top: 1px solid var(--border);
+
+  background: rgba(255, 255, 255, .012);
+}
+
+.credential-footer > span {
+  max-width: 330px;
+
+  color: #656565;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+
+/* Responsive */
+
+@media (max-width: 640px) {
+
+  .credential-backdrop {
+    padding: 12px;
+  }
+
+  .credential-dialog {
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+  }
+
+  .credential-header {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  .credential-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .credential-meta-item + .credential-meta-item {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .credential-key-label {
+    align-items: flex-start;
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .credential-key-box {
+    grid-template-columns: 1fr;
+  }
+
+  .credential-copy {
+    min-height: 42px;
+
+    border-left: 0;
+    border-top: 1px solid var(--border-strong);
+  }
+
+  .credential-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .credential-footer > span {
+    max-width: none;
+  }
+
+  .credential-footer .btn {
+    width: 100%;
+  }
+}
+

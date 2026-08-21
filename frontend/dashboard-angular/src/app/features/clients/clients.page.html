@@ -26,7 +26,7 @@
                 <td><span class="cell-primary">{{ client.name }}</span><span class="cell-secondary">ID {{ client.id }}</span></td>
                 <td><span class="badge" [class.active]="client.active" [class.inactive]="!client.active">{{ client.active ? 'Activo' : 'Inactivo' }}</span></td>
                 <td class="hide-mobile">{{ client.createdAt || '—' }}</td>
-                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(client)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="delete(client)">×</button></div></td>
+                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(client)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="openDeleteConfirm(client)">×</button></div></td>
               </tr>
             }
           </tbody>
@@ -49,4 +49,23 @@
       </form>
     </aside>
   </div>
+}
+
+@if (clientToDelete(); as client) {
+
+  <app-confirm-dialog
+    title="Eliminar cliente"
+    description="El cliente se eliminará permanentemente de la plataforma."
+    resourceLabel="Cliente"
+    [resourceValue]="client.name"
+    secondaryLabel="ID"
+    [secondaryValue]="'#' + client.id"
+    warning="Si el cliente tiene API Keys asociadas, la operación será rechazada para evitar dejar credenciales huérfanas."
+    confirmText="Eliminar cliente"
+    [loading]="deleting()"
+    [error]="deleteError()"
+    (cancelled)="closeDeleteConfirm()"
+    (confirmed)="confirmDelete()"
+  />
+
 }

@@ -24,7 +24,7 @@
                 <td><span class="cell-primary">{{ key.clientName }}</span><span class="cell-secondary">Client {{ key.clientId }}</span></td>
                 <td><span class="badge" [class.active]="key.active" [class.inactive]="!key.active">{{ key.active ? 'Activa' : 'Inactiva' }}</span></td>
                 <td class="hide-mobile">{{ key.createdAt || '—' }}</td>
-                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(key)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="delete(key)">×</button></div></td>
+                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(key)">✎</button><button class="btn btn-ghost btn-icon btn-danger" type="button" (click)="openDeleteConfirm(key)" aria-label="Eliminar">×</button></div></td>
               </tr>
             }
           </tbody>
@@ -48,3 +48,132 @@
     </aside>
   </div>
 }
+
+@if (createdApiKey(); as created) {
+  <div class="credential-backdrop">
+    <section
+      class="credential-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="credential-title"
+      aria-describedby="credential-description">
+
+      <header class="credential-header">
+        <div>
+          <span class="eyebrow">Credential generated</span>
+          <h2 id="credential-title">API Key creada</h2>
+        </div>
+
+        <span class="credential-status">
+          Creada correctamente
+        </span>
+      </header>
+
+      <div class="credential-body">
+
+        <div class="credential-warning" id="credential-description">
+          <div class="credential-warning-icon" aria-hidden="true">!</div>
+
+          <div>
+            <strong>Guarda esta clave ahora</strong>
+            <p>
+              Por seguridad, esta API Key solo se mostrará una vez.
+              No podrás recuperarla después de cerrar esta ventana.
+            </p>
+          </div>
+        </div>
+
+        <div class="credential-meta">
+          <div class="credential-meta-item">
+            <span>Cliente</span>
+            <strong>{{ created.clientName }}</strong>
+          </div>
+
+          <div class="credential-meta-item">
+            <span>Credential ID</span>
+            <strong>#{{ created.id }}</strong>
+          </div>
+
+          <div class="credential-meta-item">
+            <span>Estado</span>
+            <strong class="credential-active">Activa</strong>
+          </div>
+        </div>
+
+        <div class="credential-key-section">
+          <div class="credential-key-label">
+            <label for="generated-api-key">API Key</label>
+            <span>Secreto · visible una sola vez</span>
+          </div>
+
+          <div class="credential-key-box">
+            <code id="generated-api-key">
+              {{ created.apiKey }}
+            </code>
+
+            <button
+              class="credential-copy"
+              type="button"
+              (click)="copyCreatedApiKey()"
+              [class.copied]="copied()"
+              [attr.aria-label]="copied() ? 'API Key copiada' : 'Copiar API Key'">
+
+              @if (copied()) {
+                <span class="copy-icon" aria-hidden="true">✓</span>
+                Copiada
+              } @else {
+                <span class="copy-icon" aria-hidden="true">⧉</span>
+                Copiar
+              }
+            </button>
+          </div>
+
+          <p
+            class="credential-copy-feedback"
+            aria-live="polite">
+            @if (copied()) {
+              API Key copiada al portapapeles.
+            } @else {
+              Guárdala en un gestor de secretos o en un lugar seguro.
+            }
+          </p>
+        </div>
+
+      </div>
+
+      <footer class="credential-footer">
+        <span>
+          Al cerrar esta ventana la clave dejará de estar disponible.
+        </span>
+
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="closeCreatedApiKey()">
+          Ya he guardado la clave
+        </button>
+      </footer>
+
+    </section>
+  </div>
+}
+
+@if (apiKeyToDelete(); as apiKey) {
+
+  <app-confirm-dialog
+    title="Eliminar API Key"
+    description="Estás a punto de eliminar permanentemente esta credencial. Esta acción no se puede deshacer."
+    resourceLabel="API Key"
+    [resourceValue]="'KEY-' + apiKey.id"
+    secondaryLabel="Cliente"
+    [secondaryValue]="apiKey.clientName"
+    warning="Si alguna aplicación utiliza esta API Key, perderá el acceso inmediatamente."
+    confirmText="Eliminar API Key"
+    [loading]="deleting()"
+    [error]="deleteError()"
+    (cancelled)="closeDeleteConfirm()"
+    (confirmed)="confirmDelete()"
+  />
+
+}
+

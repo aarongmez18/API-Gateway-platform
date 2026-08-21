@@ -43,7 +43,7 @@
                 <td class="mono">{{ api.path }}</td>
                 <td><span class="badge" [class.active]="api.active" [class.inactive]="!api.active">{{ api.active ? 'Activa' : 'Inactiva' }}</span></td>
                 <td class="hide-mobile">{{ api.createdAt || '—' }}</td>
-                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(api)" title="Editar">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="delete(api)" title="Eliminar">×</button></div></td>
+                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(api)" title="Editar">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="openDeleteConfirm(api)" title="Eliminar">×</button></div></td>
               </tr>
             }
           </tbody>
@@ -71,4 +71,23 @@
       </form>
     </aside>
   </div>
+}
+
+@if (apiToDelete(); as api) {
+
+  <app-confirm-dialog
+    title="Eliminar API"
+    description="Esta API se eliminará de la configuración de la plataforma. Esta acción no se puede deshacer."
+    resourceLabel="API"
+    [resourceValue]="api.name"
+    secondaryLabel="Path"
+    [secondaryValue]="api.path"
+    warning="Las configuraciones que dependan de esta API pueden dejar de funcionar después de eliminarla."
+    confirmText="Eliminar API"
+    [loading]="deleting()"
+    [error]="deleteError()"
+    (cancelled)="closeDeleteConfirm()"
+    (confirmed)="confirmDelete()"
+  />
+
 }

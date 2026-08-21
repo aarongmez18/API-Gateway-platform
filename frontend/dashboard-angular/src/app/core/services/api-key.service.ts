@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
-import { ApiKeyModel, ApiKeyRequest } from '../models/api-key.model';
+import { ApiKeyCreatedModel, ApiKeyModel, ApiKeyRequest } from '../models/api-key.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApiKeyService {
@@ -21,8 +21,8 @@ export class ApiKeyService {
     return this.http.get<ApiKeyModel[]>(`${this.url}/client/${clientId}`);
   }
 
-  create(request: ApiKeyRequest): Observable<ApiKeyModel> {
-    return this.http.post<ApiKeyModel>(this.url, request);
+  create(request: ApiKeyRequest): Observable<ApiKeyCreatedModel> {
+    return this.http.post<ApiKeyCreatedModel>(this.url, request);
   }
 
   update(id: number, request: ApiKeyRequest): Observable<ApiKeyModel> {

@@ -3,25 +3,29 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../core/services/client.service';
 import { ClientModel } from '../../core/models/client.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-clients-page',
   standalone: true,
-  imports: [ReactiveFormsModule, EmptyStateComponent],
+  imports: [ReactiveFormsModule, EmptyStateComponent, ConfirmDialogComponent],
   templateUrl: './clients.page.html',
   styleUrl: './clients.page.css'
 })
 export class ClientsPage {
-  private readonly service = inject(ClientService);
   private readonly fb = inject(FormBuilder);
+  private readonly service = inject(ClientService);
 
-  readonly clients = signal<ClientModel[]>([]);
   readonly query = signal('');
+  readonly error = signal('');
   readonly loading = signal(true);
   readonly saving = signal(false);
-  readonly error = signal('');
+  readonly deleting = signal(false);
+  readonly deleteError = signal('');
   readonly drawerOpen = signal(false);
+  readonly clients = signal<ClientModel[]>([]);
   readonly editingId = signal<number | null>(null);
+  readonly clientToDelete = signal<ClientModel | null>(null);
 
   readonly filteredClients = computed(() => {
     const q = this.query().trim().toLowerCase();
@@ -71,14 +75,44 @@ export class ClientsPage {
     });
   }
 
-  delete(client: ClientModel): void {
-    if (!confirm(`¿Eliminar el cliente "${client.name}"?`)) return;
+openDeleteConfirm(client: ClientModel): void {
+  this.deleteError.set('');
+  this.clientToDelete.set(client);
+}
 
-    this.service.delete(client.id).subscribe({
-      next: () => this.clients.update((items) => items.filter((item) => item.id !== client.id)),
-      error: (err) => {
-        this.error.set(err?.error?.message ?? 'No se pudo eliminar el cliente.');
-      }
-    });
-  }
+closeDeleteConfirm(): void {
+  if (this.deleting()) return;
+
+  this.clientToDelete.set(null);
+  this.deleteError.set('');
+}
+
+confirmDelete(): void {
+  const client = this.clientToDelete();
+
+  if (!client || this.deleting()) return;
+
+  this.deleting.set(true);
+  this.deleteError.set('');
+
+  this.service.delete(client.id).subscribe({
+    next: () => {
+      this.clients.update((items) =>
+        items.filter((item) => item.id !== client.id)
+      );
+
+      this.deleting.set(false);
+      this.clientToDelete.set(null);
+    },
+
+    error: (err) => {
+      this.deleting.set(false);
+
+      this.deleteError.set(
+        err?.error?.message ??
+        'No se pudo eliminar el cliente.'
+      );
+    }
+  });
+}
 }

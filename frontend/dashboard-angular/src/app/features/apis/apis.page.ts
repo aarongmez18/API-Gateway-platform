@@ -3,11 +3,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { ApiModel } from '../../core/models/api.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-apis-page',
   standalone: true,
-  imports: [ReactiveFormsModule, EmptyStateComponent],
+  imports: [ReactiveFormsModule, EmptyStateComponent, ConfirmDialogComponent],
   templateUrl: './apis.page.html',
   styleUrl: './apis.page.css'
 })
@@ -15,13 +16,16 @@ export class ApisPage {
   private readonly service = inject(ApiService);
   private readonly fb = inject(FormBuilder);
 
-  readonly apis = signal<ApiModel[]>([]);
   readonly query = signal('');
+  readonly error = signal('');
   readonly loading = signal(true);
   readonly saving = signal(false);
-  readonly error = signal('');
+  readonly deleting = signal(false);
+  readonly deleteError = signal('');
   readonly drawerOpen = signal(false);
+  readonly apis = signal<ApiModel[]>([]);
   readonly editingId = signal<number | null>(null);
+  readonly apiToDelete = signal<ApiModel | null>(null);
 
   readonly filteredApis = computed(() => {
     const q = this.query().trim().toLowerCase();
@@ -96,12 +100,44 @@ export class ApisPage {
     });
   }
 
-  delete(api: ApiModel): void {
-    if (!confirm(`¿Eliminar la API "${api.name}"?`)) return;
+openDeleteConfirm(api: ApiModel): void {
+  this.deleteError.set('');
+  this.apiToDelete.set(api);
+}
 
-    this.service.delete(api.id).subscribe({
-      next: () => this.apis.update((items) => items.filter((item) => item.id !== api.id)),
-      error: () => this.error.set('No se pudo eliminar la API.')
-    });
-  }
+closeDeleteConfirm(): void {
+  if (this.deleting()) return;
+
+  this.apiToDelete.set(null);
+  this.deleteError.set('');
+}
+
+confirmDelete(): void {
+  const api = this.apiToDelete();
+
+  if (!api || this.deleting()) return;
+
+  this.deleting.set(true);
+  this.deleteError.set('');
+
+  this.service.delete(api.id).subscribe({
+    next: () => {
+      this.apis.update((items) =>
+        items.filter((item) => item.id !== api.id)
+      );
+
+      this.deleting.set(false);
+      this.apiToDelete.set(null);
+    },
+
+    error: (err) => {
+      this.deleting.set(false);
+
+      this.deleteError.set(
+        err?.error?.message ??
+        'No se pudo eliminar la API.'
+      );
+    }
+  });
+}
 }

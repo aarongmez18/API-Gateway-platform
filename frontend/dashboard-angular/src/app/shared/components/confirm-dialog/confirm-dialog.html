@@ -1,0 +1,99 @@
+<div class="confirm-backdrop">
+
+  <section
+    class="confirm-dialog"
+    role="alertdialog"
+    aria-modal="true"
+    aria-labelledby="confirm-dialog-title"
+    aria-describedby="confirm-dialog-description">
+
+    <header class="confirm-header">
+
+      <div class="confirm-danger-icon" aria-hidden="true">
+        !
+      </div>
+
+      <div>
+        <span class="eyebrow">Destructive action</span>
+
+        <h2 id="confirm-dialog-title">
+          {{ title() }}
+        </h2>
+      </div>
+
+    </header>
+
+    <div class="confirm-body">
+
+      <p
+        id="confirm-dialog-description"
+        class="confirm-description">
+        {{ description() }}
+      </p>
+
+      <div class="confirm-resource">
+
+        <div class="confirm-resource-item">
+          <span>{{ resourceLabel() }}</span>
+          <strong>{{ resourceValue() }}</strong>
+        </div>
+
+        @if (secondaryLabel() && secondaryValue()) {
+          <div class="confirm-resource-item">
+            <span>{{ secondaryLabel() }}</span>
+            <strong>{{ secondaryValue() }}</strong>
+          </div>
+        }
+
+      </div>
+
+      @if (warning()) {
+        <div class="confirm-warning">
+          <span class="confirm-warning-mark" aria-hidden="true">!</span>
+
+          <span>
+            {{ warning() }}
+          </span>
+        </div>
+      }
+
+      @if (error()) {
+        <div
+          class="confirm-error"
+          role="alert"
+          aria-live="assertive">
+          {{ error() }}
+        </div>
+      }
+
+    </div>
+
+    <footer class="confirm-footer">
+
+      <button
+        class="btn"
+        type="button"
+        [disabled]="loading()"
+        (click)="cancelled.emit()">
+        Cancelar
+      </button>
+
+      <button
+        class="confirm-delete-btn"
+        type="button"
+        [disabled]="loading()"
+        (click)="confirmed.emit()">
+
+        @if (loading()) {
+          Eliminando...
+        } @else {
+          {{ confirmText() }}
+        }
+
+      </button>
+
+    </footer>
+
+  </section>
+
+</div>

@@ -6,6 +6,10 @@ export interface ApiKeyModel {
   createdAt: string;
 }
 
+export interface ApiKeyCreatedModel extends ApiKeyModel {
+  apiKey: string;
+}
+
 export interface ApiKeyRequest {
   clientId: number;
   active: boolean;
