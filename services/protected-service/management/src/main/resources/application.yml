@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: protected-service
+
+
+
+server:
+  port: 8084
+  servlet:
+    context-path: /api-protected-management

@@ -1,5 +1,4 @@
 spring:
-  # ConfiguraciÛn general de la aplicaciÛn Spring Boot
   application:
     name: proxy
 
@@ -7,33 +6,33 @@ spring:
     gateway:
       server:
         webflux:
-          # Lista de rutas que va a gestionar el Gateway
           routes:
-            # Identificador ˙nico de esta ruta
-            - id: api
-              # API real a la que vamos a redirigir las peticiones
+
+            # Administraci√≥n: NO API Key
+            - id: api-management
               uri: http://localhost:8081
-              # Condiciones que debe cumplir una peticiÛn
-              # para que utilice esta ruta
               predicates:
-                # Cualquier peticiÛn que empiece por /todos/
-                # ser· enviada a la API configurada arriba
-                #
-                # Ejemplo:
-                # localhost:9000/todos/1
-                #          ?
-                # https://jsonplaceholder.typicode.com/todos/1
                 - Path=/api-management/**
-            - id: users
+
+            # Administraci√≥n: NO API Key
+            - id: users-management
               uri: http://localhost:8082
               predicates:
                 - Path=/users-management/**
-            - id: model
+
+            # API externa: S√ç API Key
+            - id: protected-api-management
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api-protected-management/**
+              filters:
+                - ApiKeyAuthentication
+
+            # Administraci√≥n: NO API Key
+            - id: model-management
               uri: http://localhost:8083
               predicates:
-              - Path=/model-management/api/model/**
+                - Path=/model-management/api/model/**
 
-
-# Puerto donde estar· escuchando nuestro Gateway
 server:
   port: 9000

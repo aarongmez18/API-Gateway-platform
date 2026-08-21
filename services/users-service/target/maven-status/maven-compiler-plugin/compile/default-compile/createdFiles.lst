@@ -12,9 +12,12 @@ com\apigateway\users\logic\ClientService.class
 com\apigateway\users\mapper\ApiKeyMapperImpl.class
 com\apigateway\users\mapper\ApiKeyMapper.class
 com\apigateway\users\dto\response\ErrorResponseDTO.class
+com\apigateway\users\exception\InvalidApiKeyException.class
+com\apigateway\users\dto\response\ApiKeyValidationResponseDTO.class
 com\apigateway\users\model\General.class
 com\apigateway\users\repository\repositoryInterfaces\ClientRepository.class
 com\apigateway\users\repository\ApiKeyRepositoryImpl.class
+com\apigateway\users\dto\response\ApiKeyCreatedResponseDTO.class
 com\apigateway\users\dto\request\ApiKeyRequestDTO.class
 com\apigateway\users\exception\ClientHasApiKeysException.class
 com\apigateway\users\logic\ApiKeyService.class
