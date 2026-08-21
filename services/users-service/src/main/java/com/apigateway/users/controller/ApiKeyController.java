@@ -2,7 +2,9 @@ package com.apigateway.users.controller;
 
 
 import com.apigateway.users.dto.request.ApiKeyRequestDTO;
+import com.apigateway.users.dto.response.ApiKeyCreatedResponseDTO;
 import com.apigateway.users.dto.response.ApiKeyResponseDTO;
+import com.apigateway.users.dto.response.ApiKeyValidationResponseDTO;
 import com.apigateway.users.logic.ApiKeyService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -41,9 +43,16 @@ public class ApiKeyController {
         return service.findByClientId(clientId);
     }
 
+    @GetMapping("/validate")
+    public ApiKeyValidationResponseDTO validate(
+            @RequestHeader("X-API-Key") String apiKey) {
+
+        return service.validate(apiKey);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiKeyResponseDTO create(@Valid @RequestBody ApiKeyRequestDTO dto) {
+    public ApiKeyCreatedResponseDTO create(@Valid @RequestBody ApiKeyRequestDTO dto) {
         LOG.info("ENTRY -- ApiKeyController -- create -- clientId={}", dto.clientId());
         return service.create(dto);
     }

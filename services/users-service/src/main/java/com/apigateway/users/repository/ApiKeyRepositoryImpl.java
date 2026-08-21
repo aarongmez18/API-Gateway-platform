@@ -79,6 +79,24 @@ public class ApiKeyRepositoryImpl implements ApiKeyRepository {
     }
 
     @Override
+    public Optional<ApiKey> findByKeyHash(String keyHash) {
+
+        return entityManager
+                .createQuery(
+                        """
+                        SELECT a
+                        FROM ApiKey a
+                        JOIN FETCH a.client
+                        WHERE a.keyHash = :keyHash
+                        """,
+                        ApiKey.class
+                )
+                .setParameter("keyHash", keyHash)
+                .getResultStream()
+                .findFirst();
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return entityManager.find(ApiKey.class, id) != null;
     }

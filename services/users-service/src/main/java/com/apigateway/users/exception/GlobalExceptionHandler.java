@@ -67,6 +67,23 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(InvalidApiKeyException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidApiKey(
+            InvalidApiKeyException ex) {
+
+        LOG.warn("API Key inválida");
+
+        ErrorResponseDTO error = new ErrorResponseDTO(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleException(
             Exception ex) {

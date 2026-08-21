@@ -1,6 +1,7 @@
 package com.apigateway.users.controller;
 
 import com.apigateway.users.dto.request.ApiKeyRequestDTO;
+import com.apigateway.users.dto.response.ApiKeyCreatedResponseDTO;
 import com.apigateway.users.dto.response.ApiKeyResponseDTO;
 import com.apigateway.users.logic.ApiKeyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,13 +103,13 @@ class ApiKeyControllerTest {
         ApiKeyRequestDTO request =
                 mock(ApiKeyRequestDTO.class);
 
-        ApiKeyResponseDTO response =
-                mock(ApiKeyResponseDTO.class);
+        ApiKeyCreatedResponseDTO response =
+                mock(ApiKeyCreatedResponseDTO.class);
 
         when(service.create(request))
                 .thenReturn(response);
 
-        ApiKeyResponseDTO resultado =
+        ApiKeyCreatedResponseDTO resultado =
                 controller.create(request);
 
         assertNotNull(resultado);

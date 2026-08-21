@@ -14,4 +14,5 @@ public interface ApiKeyRepository {
     void deleteById(Long id);
     boolean existsById(Long id);
     boolean existsByClientId(Long clientId);
+    Optional<ApiKey> findByKeyHash(String keyHash);
 }

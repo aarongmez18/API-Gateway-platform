@@ -1,9 +1,12 @@
 package com.apigateway.users.logic;
 
 import com.apigateway.users.dto.request.ApiKeyRequestDTO;
+import com.apigateway.users.dto.response.ApiKeyCreatedResponseDTO;
 import com.apigateway.users.dto.response.ApiKeyResponseDTO;
+import com.apigateway.users.dto.response.ApiKeyValidationResponseDTO;
 import com.apigateway.users.exception.ApiKeyNotFoundException;
 import com.apigateway.users.exception.ClientNotFoundException;
+import com.apigateway.users.exception.InvalidApiKeyException;
 import com.apigateway.users.mapper.ApiKeyMapper;
 import com.apigateway.users.model.ApiKey;
 import com.apigateway.users.model.Client;
@@ -16,33 +19,29 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.HexFormat;
 import java.util.List;
-import java.util.UUID;
+import java.util.Base64;
 
 @Service
 public class ApiKeyService {
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final Logger LOG = LoggerFactory.getLogger(ApiKeyService.class);
 
     private final ApiKeyRepository apiKeyRepository;
     private final ClientRepository clientRepository;
     private final ApiKeyMapper mapper;
 
-    public ApiKeyService(
-            ApiKeyRepository apiKeyRepository,
-            ClientRepository clientRepository,
-            ApiKeyMapper mapper) {
-
+    public ApiKeyService(ApiKeyRepository apiKeyRepository, ClientRepository clientRepository, ApiKeyMapper mapper) {
         this.apiKeyRepository = apiKeyRepository;
         this.clientRepository = clientRepository;
         this.mapper = mapper;
     }
 
     public List<ApiKeyResponseDTO> findAll() {
-
         LOG.info("ENTRY -- ApiKeyService -- findAll");
-
         return apiKeyRepository.findAll()
                 .stream()
                 .map(mapper::toDto)
@@ -71,26 +70,14 @@ public class ApiKeyService {
                 .map(mapper::toDto)
                 .toList();
 
-        LOG.info(
-                "OK -- ApiKeyService -- findByClientId -- clientId={} -- total={}",
-                clientId,
-                apiKeys.size()
-        );
-
+        LOG.info("OK -- ApiKeyService -- findByClientId -- clientId={} -- total={}", clientId, apiKeys.size());
         return apiKeys;
     }
 
-    public ApiKeyResponseDTO create(ApiKeyRequestDTO dto) {
+    public ApiKeyCreatedResponseDTO create(ApiKeyRequestDTO dto) {
 
-        LOG.info(
-                "ENTRY -- ApiKeyService -- create -- clientId={}",
-                dto.clientId()
-        );
-
-        Client client = clientRepository.findById(dto.clientId())
-                .orElseThrow(() ->
-                        new ClientNotFoundException(dto.clientId())
-                );
+        LOG.info("ENTRY -- ApiKeyService -- create -- clientId={}", dto.clientId());
+        Client client = clientRepository.findById(dto.clientId()).orElseThrow(() -> new ClientNotFoundException(dto.clientId()));
 
         String rawApiKey = generateApiKey();
         String keyHash = hashApiKey(rawApiKey);
@@ -106,18 +93,18 @@ public class ApiKeyService {
 
         ApiKey saved = apiKeyRepository.save(apiKey);
 
-        LOG.info(
-                "OK -- ApiKeyService -- create -- id={} -- clientId={}",
+        LOG.info("OK -- ApiKeyService -- create -- id={} -- clientId={}", saved.getId(), dto.clientId());
+        return new ApiKeyCreatedResponseDTO(
                 saved.getId(),
-                dto.clientId()
+                saved.getClient().getId(),
+                saved.getClient().getName(),
+                saved.getActive(),
+                saved.getCreatedAt(),
+                rawApiKey
         );
-
-        return mapper.toDto(saved);
     }
 
-    public ApiKeyResponseDTO update(
-            Long id,
-            ApiKeyRequestDTO dto) {
+    public ApiKeyResponseDTO update(Long id, ApiKeyRequestDTO dto) {
 
         LOG.info("ENTRY -- ApiKeyService -- update -- id={}", id);
         ApiKey apiKey = apiKeyRepository.findById(id).orElseThrow(() -> new ApiKeyNotFoundException(id));
@@ -147,10 +134,35 @@ public class ApiKeyService {
         LOG.info("OK -- ApiKeyService -- delete -- id={}", id);
     }
 
+    public ApiKeyValidationResponseDTO validate(String rawApiKey) {
+
+        String keyHash = hashApiKey(rawApiKey);
+
+        ApiKey apiKey = apiKeyRepository
+                .findByKeyHash(keyHash)
+                .orElseThrow(InvalidApiKeyException::new);
+
+        if (!Boolean.TRUE.equals(apiKey.getActive())) {
+            throw new InvalidApiKeyException();
+        }
+
+        Client client = apiKey.getClient();
+
+        if (!Boolean.TRUE.equals(client.getActive())) {
+            throw new InvalidApiKeyException();
+        }
+
+        return new ApiKeyValidationResponseDTO(client.getId(), client.getName());
+    }
+
     private String generateApiKey() {
-        return UUID.randomUUID()
-                .toString()
-                .replace("-", "");
+        byte[] randomBytes = new byte[32];
+        SECURE_RANDOM.nextBytes(randomBytes);
+        String randomPart = Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(randomBytes);
+
+        return "api_" + randomPart;
     }
 
     private String hashApiKey(String apiKey) {
@@ -158,7 +170,6 @@ public class ApiKeyService {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(apiKey.getBytes(StandardCharsets.UTF_8));
-
             return HexFormat.of().formatHex(hash);
 
         } catch (NoSuchAlgorithmException e) {

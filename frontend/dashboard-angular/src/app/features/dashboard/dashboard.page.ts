@@ -45,7 +45,7 @@ export class DashboardPage {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('No se pudo cargar el resumen. Comprueba Gateway, api-service y users-service.');
+        this.error.set('No se pudo cargar el resumen. Comprueba si el servicio está disponible.');
         this.loading.set(false);
       }
     });
