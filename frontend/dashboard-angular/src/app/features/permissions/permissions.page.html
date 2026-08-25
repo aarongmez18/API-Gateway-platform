@@ -1,0 +1,108 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">Access Control</span>
+      <h1>Permisos</h1>
+      <p>Controla qué APIs puede consumir cada cliente autenticado mediante sus API Keys.</p>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="notice">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <section class="panel"><div class="loading">Cargando configuración de acceso...</div></section>
+  } @else if (clients().length === 0) {
+    <section class="panel">
+      <div class="panel-body">
+        <app-empty-state title="No hay clientes" text="Crea al menos un cliente antes de configurar permisos de acceso." />
+      </div>
+    </section>
+  } @else {
+    <div class="permissions-layout">
+      <section class="panel clients-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Clientes</h2>
+            <span>{{ clients().length }} registrados</span>
+          </div>
+        </div>
+
+        <div class="client-list">
+          @for (client of clients(); track client.id) {
+            <button class="client-option" type="button" [class.selected]="selectedClientId() === client.id" (click)="selectClient(client.id)">
+              <span class="client-avatar">{{ client.name.charAt(0).toUpperCase() }}</span>
+              <span class="client-info">
+                <strong>{{ client.name }}</strong>
+                <small>CLIENT-{{ client.id }}</small>
+              </span>
+              <span class="client-status" [class.active]="client.active"></span>
+            </button>
+          }
+        </div>
+      </section>
+
+      <section class="panel permissions-panel">
+        <div class="permissions-head">
+          <div>
+            <span class="eyebrow">Cliente seleccionado</span>
+            <h2>{{ selectedClient()?.name }}</h2>
+            <p>Configura las APIs que este cliente puede consumir a través del Gateway.</p>
+          </div>
+
+          <div class="access-summary">
+            <strong>{{ grantedCount() }}</strong>
+            <span>de {{ apis().length }} APIs permitidas</span>
+          </div>
+        </div>
+
+        <div class="permission-toolbar">
+          <input class="search" type="search" placeholder="Buscar API, código o path..." [value]="query()" (input)="query.set($any($event.target).value)" />
+          <span>{{ filteredApis().length }} resultados</span>
+        </div>
+
+        @if (loadingPermissions()) {
+          <div class="loading">Cargando permisos...</div>
+        } @else if (apis().length === 0) {
+          <div class="panel-body">
+            <app-empty-state title="No hay APIs" text="Registra APIs antes de configurar permisos para clientes." />
+          </div>
+        } @else {
+          <div class="permission-list">
+            @for (api of filteredApis(); track api.code) {
+              <div class="permission-row" [class.granted]="hasPermission(api.code)">
+                <div class="api-identity">
+                  <span class="api-mark">{{ api.name.charAt(0).toUpperCase() }}</span>
+
+                  <div class="api-info">
+                    <div class="api-name-row">
+                      <strong>{{ api.name }}</strong>
+                      <span class="badge" [class.active]="api.active" [class.inactive]="!api.active">{{ api.active ? 'Activa' : 'Inactiva' }}</span>
+                    </div>
+
+                    <code>{{ api.code }}</code>
+                    <span>{{ api.path }}</span>
+                  </div>
+                </div>
+
+                <div class="permission-control">
+                  <div class="permission-state">
+                    <strong>{{ hasPermission(api.code) ? 'Permitido' : 'Sin acceso' }}</strong>
+                    <small>{{ hasPermission(api.code) ? 'El Gateway permitirá las solicitudes' : 'Las solicitudes recibirán 403' }}</small>
+                  </div>
+
+                  <button class="permission-switch" type="button" role="switch" [attr.aria-checked]="hasPermission(api.code)" [disabled]="isPending(api.code) || !api.active" [class.checked]="hasPermission(api.code)" [class.pending]="isPending(api.code)" (click)="togglePermission(api)">
+                    <span></span>
+                  </button>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-filter">No hay APIs que coincidan con la búsqueda.</div>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  }
+</section>

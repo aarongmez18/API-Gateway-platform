@@ -1,5 +1,6 @@
 export interface ApiModel {
   id: number;
+  code: string;
   name: string;
   targetUrl: string;
   path: string;

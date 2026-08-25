@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-08-19T20:54:32+0200",
+    date = "2026-08-25T16:25:44+0200",
     comments = "version: 1.6.3, compiler: javac, environment: Java 23.0.1 (Oracle Corporation)"
 )
 @Component
@@ -39,6 +39,7 @@ public class ApiMapperImpl implements ApiMapper {
         ApiResponseDTO apiResponseDTO = new ApiResponseDTO();
 
         apiResponseDTO.setId( api.getId() );
+        apiResponseDTO.setCode( api.getCode() );
         apiResponseDTO.setName( api.getName() );
         apiResponseDTO.setTargetUrl( api.getTargetUrl() );
         apiResponseDTO.setPath( api.getPath() );

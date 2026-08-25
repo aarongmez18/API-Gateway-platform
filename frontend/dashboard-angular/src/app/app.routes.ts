@@ -23,6 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/api-keys/api-keys.page').then((m) => m.ApiKeysPage)
   },
   {
+    path: 'permissions',
+    loadComponent: () => import('./features/permissions/permissions.page').then((m) => m.PermissionsPage)
+  },
+  {
     path: 'requests',
     loadComponent: () => import('./features/requests/requests.page').then((m) => m.RequestsPage)
   },
