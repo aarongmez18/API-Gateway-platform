@@ -27,6 +27,9 @@ spring:
                 - Path=/api-protected-management/**
               filters:
                 - ApiKeyAuthentication
+                - name: ApiPermission
+                  args:
+                    apiCode: apis-management
 
             # Administración: NO API Key
             - id: model-management

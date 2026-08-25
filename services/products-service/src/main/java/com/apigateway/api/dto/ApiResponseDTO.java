@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public class ApiResponseDTO {
 
     private Long id;
+    private String code;
     private String name;
     private String targetUrl;
     private String path;
@@ -22,6 +23,10 @@ public class ApiResponseDTO {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getCode() { return code; }
+
+    public void setCode(String code) { this.code = code; }
 
     public String getName() {
         return name;

@@ -54,6 +54,12 @@ public class ApiRepositoryImpl implements ApiRepository {
     }
 
     @Override
+    public boolean existsByCode(String code) {
+        Long count = entityManager.createQuery("SELECT COUNT(a) FROM Api a WHERE a.code = :code", Long.class).setParameter("code", code).getSingleResult();
+        return count > 0;
+    }
+
+    @Override
     public boolean existsById(Long id) {
         return entityManager.find(Api.class, id) != null;
     }

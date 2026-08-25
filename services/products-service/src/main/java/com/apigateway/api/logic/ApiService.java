@@ -1,6 +1,5 @@
 package com.apigateway.api.logic;
 
-import com.apigateway.api.controller.ApiController;
 import com.apigateway.api.dto.ApiResponseDTO;
 import com.apigateway.api.dto.ApiRequestDTO;
 import com.apigateway.api.exception.ApiNotFoundException;
@@ -47,8 +46,9 @@ public class ApiService {
     public ApiResponseDTO create(ApiRequestDTO dto) {
         LOG.info("ENTRY -- ApiService -- create");
         Api api = mapper.toEntity(dto);
+        api.setCode(generateUniqueCode(dto.getName()));
         Api saved = repository.save(api);
-        LOG.info("OK -- ApiService -- create");
+        LOG.info("OK -- ApiService -- create -- code={}", saved.getCode());
         return mapper.toDto(saved);
     }
 
@@ -76,5 +76,22 @@ public class ApiService {
         repository.deleteById(id);
 
         LOG.info("OK -- ApiService -- delete -- id={}", id);
+    }
+
+    private String generateUniqueCode(String name) {
+        String baseCode = generateCode(name);
+        String code = baseCode;
+        int suffix = 2;
+
+        while (repository.existsByCode(code)) {
+            code = baseCode + "-" + suffix++;
+        }
+
+        return code;
+    }
+
+    private String generateCode(String name) {
+        String normalized = java.text.Normalizer.normalize(name, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return normalized.trim().toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "");
     }
 }

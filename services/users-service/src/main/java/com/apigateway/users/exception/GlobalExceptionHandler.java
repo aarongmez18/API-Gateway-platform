@@ -67,6 +67,11 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(PermissionAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handlePermissionAlreadyExists(PermissionAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDTO(LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(),ex.getMessage()));
+    }
+
     @ExceptionHandler(InvalidApiKeyException.class)
     public ResponseEntity<ErrorResponseDTO> handleInvalidApiKey(
             InvalidApiKeyException ex) {

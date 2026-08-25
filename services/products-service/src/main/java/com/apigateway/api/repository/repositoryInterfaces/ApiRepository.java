@@ -16,5 +16,7 @@ public interface ApiRepository {
 
     void deleteById(Long id);
 
+    boolean existsByCode(String code);
+
     boolean existsById(Long id);
 }

@@ -20,6 +20,9 @@ public class Api extends General {
     @Column(name = "path", nullable = false)
     private String path;
 
+    @Column(name = "code", nullable = false, unique = true, length = 100)
+    private String code;
+
     public Api() {}
 
     public Api(Long id, String targetUrl, String name, String path) {
@@ -61,6 +64,10 @@ public class Api extends General {
         this.name = name;
     }
 
+    public String getCode() { return code; }
+
+    public void setCode(String code) { this.code = code; }
+
     @Override
     public String toString() {
         return "Api{" +
@@ -68,6 +75,7 @@ public class Api extends General {
                 ", name='" + name + '\'' +
                 ", targetUrl='" + targetUrl + '\'' +
                 ", path='" + path + '\'' +
+                ", code='" + code + '\'' +
                 '}';
     }
 }
