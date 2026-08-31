@@ -18,5 +18,20 @@ services:
       - "6379:6379"
     restart: unless-stopped
 
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.2
+    container_name: keycloak-gateway
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  keycloak_data:
