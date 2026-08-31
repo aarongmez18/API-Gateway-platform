@@ -1,7 +1,7 @@
 <section class="page">
   <header class="page-header">
     <div><span class="eyebrow">Identity / consumers</span><h1>Clientes</h1><p>Gestiona las aplicaciones y consumidores autorizados a utilizar la plataforma.</p></div>
-    <button class="btn btn-primary" type="button" (click)="openCreate()">＋ Nuevo cliente</button>
+    @if (auth.isAdmin()) { <button class="btn btn-primary" type="button" (click)="openCreate()">＋ Nuevo cliente</button> }
   </header>
 
   @if (error()) { <div class="notice">{{ error() }}</div> }
@@ -27,7 +27,12 @@
                 <td><span class="cell-primary">{{ client.rateLimitPerMinute }}</span><span class="cell-secondary">peticiones/min</span></td>
                 <td><span class="badge" [class.active]="client.active" [class.inactive]="!client.active">{{ client.active ? 'Activo' : 'Inactivo' }}</span></td>
                 <td class="hide-mobile">{{ client.createdAt || '—' }}</td>
-                <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(client)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="openDeleteConfirm(client)">×</button></div></td>
+                <td>@if (auth.isAdmin()) {
+                  <div class="actions">
+                    <button class="btn btn-ghost btn-icon" (click)="openEdit(client)">✎</button>
+                    <button class="btn btn-ghost btn-icon btn-danger" (click)="openDeleteConfirm(client)">×</button>
+                  </div>
+                }</td>
               </tr>
             }
           </tbody>

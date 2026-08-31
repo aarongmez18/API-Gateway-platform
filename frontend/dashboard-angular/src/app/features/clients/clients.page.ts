@@ -4,6 +4,7 @@ import { ClientService } from '../../core/services/client.service';
 import { ClientModel } from '../../core/models/client.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-clients-page',
@@ -22,6 +23,7 @@ export class ClientsPage {
   readonly saving = signal(false);
   readonly deleting = signal(false);
   readonly deleteError = signal('');
+  readonly auth = inject(AuthService);
   readonly drawerOpen = signal(false);
   readonly clients = signal<ClientModel[]>([]);
   readonly editingId = signal<number | null>(null);
