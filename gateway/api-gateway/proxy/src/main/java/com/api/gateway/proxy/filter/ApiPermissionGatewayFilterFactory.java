@@ -24,26 +24,15 @@ public class ApiPermissionGatewayFilterFactory extends AbstractGatewayFilterFact
         return (exchange, chain) -> {
             Long clientId = exchange.getAttribute(ApiKeyAuthenticationGatewayFilterFactory.AUTHENTICATED_CLIENT_ID_ATTR);
 
-            if (clientId == null) {
-                return completeWithStatus(exchange, HttpStatus.UNAUTHORIZED);
-            }
-
-            if (config.getApiCode() == null || config.getApiCode().isBlank()) {
-                return completeWithStatus(exchange, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            if (clientId == null) return completeWithStatus(exchange, HttpStatus.UNAUTHORIZED);
+            if (config.getApiCode() == null || config.getApiCode().isBlank()) return completeWithStatus(exchange, HttpStatus.INTERNAL_SERVER_ERROR);
 
             return permissionClient.check(clientId, config.getApiCode())
                     .flatMap(permission -> {
-                        if (!permission.allowed()) {
-                            return completeWithStatus(exchange, HttpStatus.FORBIDDEN);
-                        }
-
+                        if (!permission.allowed()) return completeWithStatus(exchange, HttpStatus.FORBIDDEN);
                         return chain.filter(exchange);
                     })
-                    .onErrorResume(
-                            WebClientRequestException.class,
-                            ex -> completeWithStatus(exchange, HttpStatus.SERVICE_UNAVAILABLE)
-                    );
+                    .onErrorResume(WebClientRequestException.class, ex -> completeWithStatus(exchange, HttpStatus.SERVICE_UNAVAILABLE));
         };
     }
 
@@ -53,15 +42,10 @@ public class ApiPermissionGatewayFilterFactory extends AbstractGatewayFilterFact
     }
 
     public static class Config {
-
         private String apiCode;
 
-        public String getApiCode() {
-            return apiCode;
-        }
+        public String getApiCode() { return apiCode; }
 
-        public void setApiCode(String apiCode) {
-            this.apiCode = apiCode;
-        }
+        public void setApiCode(String apiCode) { this.apiCode = apiCode; }
     }
 }

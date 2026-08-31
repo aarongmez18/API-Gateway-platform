@@ -8,7 +8,7 @@ public record ClientResponseDTO(
         Long id,
         String name,
         Boolean active,
+        Integer rateLimitPerMinute,
         @JsonFormat(pattern = "dd/MM/yyyy")
         LocalDateTime createdAt
-) {
-}
+) {}

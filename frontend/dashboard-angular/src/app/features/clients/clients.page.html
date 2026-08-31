@@ -19,11 +19,12 @@
     } @else {
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Cliente</th><th>Estado</th><th class="hide-mobile">Creado</th><th></th></tr></thead>
+          <thead><tr><th>Cliente</th><th>Límite</th><th>Estado</th><th class="hide-mobile">Creado</th><th></th></tr></thead>
           <tbody>
             @for (client of filteredClients(); track client.id) {
               <tr>
                 <td><span class="cell-primary">{{ client.name }}</span><span class="cell-secondary">ID {{ client.id }}</span></td>
+                <td><span class="cell-primary">{{ client.rateLimitPerMinute }}</span><span class="cell-secondary">peticiones/min</span></td>
                 <td><span class="badge" [class.active]="client.active" [class.inactive]="!client.active">{{ client.active ? 'Activo' : 'Inactivo' }}</span></td>
                 <td class="hide-mobile">{{ client.createdAt || '—' }}</td>
                 <td><div class="actions"><button class="btn btn-ghost btn-icon" (click)="openEdit(client)">✎</button><button class="btn btn-ghost btn-icon btn-danger" (click)="openDeleteConfirm(client)">×</button></div></td>
@@ -43,6 +44,7 @@
       <form class="drawer-body" [formGroup]="form" (ngSubmit)="save()">
         <div class="form-grid">
           <div class="field"><label>Nombre</label><input formControlName="name" placeholder="Mobile App" /><small>Nombre de la aplicación, partner o consumidor.</small></div>
+          <div class="field"><label>Límite por minuto</label><input type="number" formControlName="rateLimitPerMinute" min="1" placeholder="100" /><small>Número máximo de peticiones permitidas por minuto.</small></div>
           <label class="check-row"><input type="checkbox" formControlName="active" /> Cliente activo</label>
         </div>
         <div class="form-actions"><button class="btn" type="button" (click)="closeDrawer()">Cancelar</button><button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Guardando...' : 'Guardar cliente' }}</button></div>

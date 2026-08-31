@@ -20,6 +20,7 @@ public class ApiKeyAuthenticationGatewayFilterFactory extends AbstractGatewayFil
     private static final String CLIENT_NAME_HEADER = "X-Client-Name";
 
     public static final String AUTHENTICATED_CLIENT_ID_ATTR = "authenticatedClientId";
+    public static final String AUTHENTICATED_CLIENT_RATE_LIMIT_ATTR = "authenticatedClientRateLimit";
 
     private final ApiKeyValidationClient validationClient;
 
@@ -54,6 +55,7 @@ public class ApiKeyAuthenticationGatewayFilterFactory extends AbstractGatewayFil
 
                         ServerWebExchange authenticatedExchange = exchange.mutate().request(request).build();
                         authenticatedExchange.getAttributes().put(AUTHENTICATED_CLIENT_ID_ATTR, client.clientId());
+                        authenticatedExchange.getAttributes().put(AUTHENTICATED_CLIENT_RATE_LIMIT_ATTR, client.rateLimitPerMinute());
                         return chain.filter(authenticatedExchange);
                     }).onErrorResume(WebClientResponseException.Unauthorized.class,
                             ex -> completeWithStatus(exchange, HttpStatus.UNAUTHORIZED)

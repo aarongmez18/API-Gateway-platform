@@ -14,11 +14,20 @@ public class Client extends General {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "rate_limit_per_minute", nullable = false)
+    private Integer rateLimitPerMinute = 100;
+
     public Client() {}
 
     public Client(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Client(Integer rateLimitPerMinute, String name, Long id) {
+        this.rateLimitPerMinute = rateLimitPerMinute;
+        this.name = name;
+        this.id = id;
     }
 
     public Long getId() {
@@ -36,6 +45,10 @@ public class Client extends General {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Integer getRateLimitPerMinute() { return rateLimitPerMinute; }
+
+    public void setRateLimitPerMinute(Integer rateLimitPerMinute) { this.rateLimitPerMinute = rateLimitPerMinute;}
 
     @Override
     public String toString() {

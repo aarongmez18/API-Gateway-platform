@@ -34,6 +34,7 @@ export class ClientsPage {
 
   readonly form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(100)]],
+    rateLimitPerMinute: [100, [Validators.required, Validators.min(1)]],
     active: [true]
   });
 
@@ -50,13 +51,13 @@ export class ClientsPage {
 
   openCreate(): void {
     this.editingId.set(null);
-    this.form.reset({ name: '', active: true });
+    this.form.reset({ name: '', rateLimitPerMinute: 100, active: true });
     this.drawerOpen.set(true);
   }
 
   openEdit(client: ClientModel): void {
     this.editingId.set(client.id);
-    this.form.setValue({ name: client.name, active: client.active });
+    this.form.setValue({ name: client.name, rateLimitPerMinute: client.rateLimitPerMinute, active: client.active });
     this.drawerOpen.set(true);
   }
 

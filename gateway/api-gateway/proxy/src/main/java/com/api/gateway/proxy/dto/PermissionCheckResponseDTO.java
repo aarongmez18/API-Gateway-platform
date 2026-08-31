@@ -1,5 +1,3 @@
 package com.api.gateway.proxy.dto;
 
-public record PermissionCheckResponseDTO(
-        boolean allowed
-) {}
+public record PermissionCheckResponseDTO(boolean allowed) {}

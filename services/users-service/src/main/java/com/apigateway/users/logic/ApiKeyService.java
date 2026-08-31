@@ -152,7 +152,7 @@ public class ApiKeyService {
             throw new InvalidApiKeyException();
         }
 
-        return new ApiKeyValidationResponseDTO(client.getId(), client.getName());
+        return new ApiKeyValidationResponseDTO(client.getId(), client.getName(), client.getRateLimitPerMinute());
     }
 
     private String generateApiKey() {

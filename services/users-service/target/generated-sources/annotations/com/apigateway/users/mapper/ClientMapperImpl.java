@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-08-21T17:11:36+0200",
+    date = "2026-08-31T16:27:23+0200",
     comments = "version: 1.6.3, compiler: javac, environment: Java 23.0.1 (Oracle Corporation)"
 )
 @Component
@@ -25,6 +25,7 @@ public class ClientMapperImpl implements ClientMapper {
 
         client.setActive( dto.active() );
         client.setName( dto.name() );
+        client.setRateLimitPerMinute( dto.rateLimitPerMinute() );
 
         return client;
     }
@@ -38,14 +39,16 @@ public class ClientMapperImpl implements ClientMapper {
         Long id = null;
         String name = null;
         Boolean active = null;
+        Integer rateLimitPerMinute = null;
         LocalDateTime createdAt = null;
 
         id = client.getId();
         name = client.getName();
         active = client.getActive();
+        rateLimitPerMinute = client.getRateLimitPerMinute();
         createdAt = client.getCreatedAt();
 
-        ClientResponseDTO clientResponseDTO = new ClientResponseDTO( id, name, active, createdAt );
+        ClientResponseDTO clientResponseDTO = new ClientResponseDTO( id, name, active, rateLimitPerMinute, createdAt );
 
         return clientResponseDTO;
     }
@@ -58,5 +61,6 @@ public class ClientMapperImpl implements ClientMapper {
 
         client.setActive( dto.active() );
         client.setName( dto.name() );
+        client.setRateLimitPerMinute( dto.rateLimitPerMinute() );
     }
 }
