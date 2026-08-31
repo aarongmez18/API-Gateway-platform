@@ -1,4 +1,4 @@
-package com.api.gateway.requests_service;
+package com.api.gateway.requests.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
