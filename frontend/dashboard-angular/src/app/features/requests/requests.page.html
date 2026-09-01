@@ -1,53 +1,113 @@
 <section class="page">
   <header class="page-header">
     <div>
-      <span class="eyebrow">Observability / frontend session</span>
+      <span class="eyebrow">Observability / gateway</span>
       <h1>Peticiones</h1>
-      <p>Actividad HTTP realizada desde esta interfaz contra el Gateway durante la sesión actual.</p>
+      <p>Consulta las peticiones procesadas por el Gateway, su cliente, API, estado HTTP y tiempo de respuesta.</p>
     </div>
-    <button class="btn" type="button" (click)="activity.clear()" [disabled]="activity.total() === 0">Limpiar actividad</button>
+    <button class="btn" type="button" (click)="load()" [disabled]="loading()">↻ Actualizar</button>
   </header>
 
+  @if (error()) {
+    <div class="notice">{{ error() }}</div>
+  }
+
   <div class="request-stats">
-    <div><span>Total</span><strong>{{ activity.total() }}</strong></div>
-    <div><span>Pendientes</span><strong>{{ activity.pending() }}</strong></div>
-    <div><span>Errores</span><strong>{{ activity.errors() }}</strong></div>
+    <div><span>Total</span><strong>{{ totalElements() }}</strong></div>
+    <div><span>Página</span><strong>{{ totalPages() === 0 ? 0 : page() + 1 }} / {{ totalPages() }}</strong></div>
+    <div><span>Errores en página</span><strong>{{ pageErrors() }}</strong></div>
+    <div><span>Latencia media</span><strong>{{ averageDuration() }} ms</strong></div>
   </div>
 
   <section class="panel">
-    <div class="panel-head">
-      <div class="method-filter">
-        @for (item of ['ALL', 'GET', 'POST', 'PUT', 'DELETE']; track item) {
-          <button class="method-btn" [class.selected]="method() === item" (click)="method.set(item)">{{ item }}</button>
-        }
+    <div class="filters">
+      <div class="filter-field">
+        <label>Cliente</label>
+        <select [value]="clientId() ?? ''" (change)="setClient($any($event.target).value)">
+          <option value="">Todos los clientes</option>
+          @for (client of clients(); track client.id) {
+            <option [value]="client.id">{{ client.name }}</option>
+          }
+        </select>
       </div>
-      <span>Máximo 100 registros</span>
+
+      <div class="filter-field">
+        <label>API</label>
+        <select [value]="apiCode() ?? ''" (change)="setApi($any($event.target).value)">
+          <option value="">Todas las APIs</option>
+          @for (api of apis(); track api.id) {
+            <option [value]="api.code">{{ api.name }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label>Estado HTTP</label>
+        <select [value]="statusCode() ?? ''" (change)="setStatus($any($event.target).value)">
+          <option value="">Todos los estados</option>
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button class="btn" type="button" (click)="clearFilters()" [disabled]="clientId() === null && apiCode() === null && statusCode() === null">Limpiar filtros</button>
+      </div>
     </div>
 
-    @if (requests().length === 0) {
+    <div class="panel-head">
+      <span>{{ totalElements() }} peticiones encontradas</span>
+      <span>{{ size }} por página</span>
+    </div>
+
+    @if (loading()) {
+      <div class="loading">Cargando peticiones...</div>
+    } @else if (requests().length === 0) {
       <div class="panel-body">
-        <app-empty-state title="Sin peticiones registradas" text="Navega por APIs, Clientes o API Keys. Las llamadas al Gateway aparecerán aquí automáticamente." />
+        <app-empty-state title="Sin peticiones registradas" text="No hay peticiones que coincidan con los filtros seleccionados." />
       </div>
     } @else {
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Método</th><th>Endpoint</th><th>Estado</th><th>Duración</th><th class="hide-mobile">Hora</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>API</th>
+              <th>Método</th>
+              <th>Endpoint</th>
+              <th>Estado</th>
+              <th>Duración</th>
+              <th class="hide-mobile">Fecha</th>
+              <th class="hide-mobile">Hora</th>
+            </tr>
+          </thead>
           <tbody>
             @for (request of requests(); track request.id) {
               <tr>
-                <td><span class="method-tag" [attr.data-method]="request.method">{{ request.method }}</span></td>
-                <td class="mono">{{ request.endpoint }}</td>
                 <td>
-                  <span class="badge" [class.active]="request.state === 'success'" [class.error]="request.state === 'error'" [class.pending]="request.state === 'pending'">
-                    {{ request.status ?? '...' }}
-                  </span>
+                  <span class="cell-primary">{{ request.clientName || 'No identificado' }}</span>
+                  <span class="cell-secondary">{{ request.clientId === null ? 'Sin cliente' : 'ID ' + request.clientId }}</span>
                 </td>
-                <td class="mono">{{ request.durationMs === null ? '—' : request.durationMs + ' ms' }}</td>
-                <td class="hide-mobile">{{ request.startedAt | date:'HH:mm:ss' }}</td>
+                <td><span class="api-code">{{ request.apiCode }}</span></td>
+                <td><span class="method-tag" [attr.data-method]="request.method">{{ request.method }}</span></td>
+                <td class="mono endpoint">{{ request.endpoint }}</td>
+                <td>
+                  <span class="badge" [class.active]="request.statusCode < 400" [class.error]="request.statusCode >= 400">{{ request.statusCode }}</span>
+                </td>
+                <td class="mono">{{ request.durationMs }} ms</td>
+                <td class="hide-mobile">{{ request.requestedAt | date:'dd/MM/yyyy' }}</td>
+                <td class="hide-mobile">{{ request.requestedAt | date:'HH:mm:ss' }}</td>
               </tr>
             }
           </tbody>
         </table>
+      </div>
+
+      <div class="pagination">
+        <button class="btn" type="button" (click)="previousPage()" [disabled]="page() === 0 || loading()">← Anterior</button>
+        <span>Página {{ page() + 1 }} de {{ totalPages() }}</span>
+        <button class="btn" type="button" (click)="nextPage()" [disabled]="page() + 1 >= totalPages() || loading()">Siguiente →</button>
       </div>
     }
   </section>

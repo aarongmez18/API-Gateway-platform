@@ -8,5 +8,15 @@
     "target": "http://localhost:9000",
     "secure": false,
     "changeOrigin": true
+  },
+  "/model-management/**": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/requests-management/**": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "changeOrigin": true
   }
 }

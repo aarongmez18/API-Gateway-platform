@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { from, switchMap } from 'rxjs';
 import { keycloak } from '../auth/keycloak';
 
-const SECURED_PATHS = ['/api-management', '/users-management', '/model-management'];
+const SECURED_PATHS = ['/api-management', '/users-management', '/model-management', '/requests-management'];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const securedRequest = SECURED_PATHS.some((path) => req.url.startsWith(path));
