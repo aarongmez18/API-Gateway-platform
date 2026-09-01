@@ -16,7 +16,7 @@
     <app-stat-card label="APIs registradas" [value]="apis().length" [helper]="activeApis() + ' activas'" />
     <app-stat-card label="Clientes" [value]="clients().length" [helper]="activeClients() + ' activos'" />
     <app-stat-card label="API Keys" [value]="apiKeyCount()" helper="credenciales registradas" />
-    <app-stat-card label="Gateway" value="UP" helper="localhost:9000" />
+    <app-stat-card label="Peticiones" [value]="requestCount()" helper="registradas por el Gateway" />
   </div>
 
   <div class="dashboard-grid">
@@ -50,11 +50,16 @@
       <div class="topology-body">
         <div class="node gateway-node"><small>ENTRY</small><strong>Gateway</strong><span>:9000</span></div>
         <div class="connector"></div>
-        <div class="node-grid">
-          <div class="node"><small>SERVICE</small><strong>api-service</strong><span>:8081</span></div>
-          <div class="node"><small>SERVICE</small><strong>users-service</strong><span>:8082</span></div>
-          <div class="node"><small>DATABASE</small><strong>PostgreSQL</strong><span>:5432</span></div>
-        </div>
+          <div class="node-grid">
+            <div class="node"><small>SERVICE</small><strong>products-service</strong><span>:8081</span></div>
+            <div class="node"><small>SERVICE</small><strong>users-service</strong><span>:8082</span></div>
+            <div class="node"><small>SERVICE</small><strong>model-service</strong><span>:8083</span></div>
+            <div class="node"><small>SERVICE</small><strong>protected-service</strong><span>:8084</span></div>
+            <div class="node"><small>SERVICE</small><strong>requests-service</strong><span>:8085</span></div>
+            <div class="node"><small>DATABASE</small><strong>PostgreSQL</strong><span>:5432</span></div>
+            <div class="node"><small>CACHE</small><strong>Redis</strong><span>:6379</span></div>
+            <div class="node"><small>IDENTITY</small><strong>Keycloak</strong><span>:8080</span></div>
+          </div>
       </div>
     </section>
   </div>

@@ -6,6 +6,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog';
 import { AuthService } from '../../core/auth/auth.service';
 
+
 @Component({
   selector: 'app-clients-page',
   standalone: true,
@@ -16,6 +17,7 @@ import { AuthService } from '../../core/auth/auth.service';
 export class ClientsPage {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(ClientService);
+
 
   readonly query = signal('');
   readonly error = signal('');
