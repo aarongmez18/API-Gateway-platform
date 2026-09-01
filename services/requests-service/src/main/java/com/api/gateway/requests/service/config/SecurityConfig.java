@@ -15,7 +15,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/internal/request-logs").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/request-logs").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/request-logs", "/request-logs/**").authenticated()
                         .anyRequest().denyAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}))

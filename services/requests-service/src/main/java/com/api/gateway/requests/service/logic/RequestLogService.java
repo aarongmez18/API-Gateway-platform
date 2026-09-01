@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import com.api.gateway.requests.service.dto.response.*;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RequestLogService {
@@ -40,6 +44,41 @@ public class RequestLogService {
 
         LOG.info("OK -- RequestLogService -- find -- totalElements={}", result.getTotalElements());
 
+        return result;
+    }
+
+    public RequestDashboardResponseDTO dashboard() {
+        LOG.info("ENTRY -- RequestLogService -- dashboard");
+
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDate today = LocalDate.now(zone);
+        OffsetDateTime from = today.atStartOfDay(zone).toOffsetDateTime();
+        OffsetDateTime to = today.plusDays(1).atStartOfDay(zone).toOffsetDateTime();
+
+        Long totalRequests = repository.countAll();
+        Long todayRequests = repository.countBetween(from, to);
+        Long errors = repository.countErrorsBetween(from, to);
+        Double average = repository.averageDurationBetween(from, to);
+
+        List<HourlyMetricResponseDTO> requestsByHour = completeHours(repository.countByHour(from, to));
+        List<HourlyMetricResponseDTO> errorsByHour = completeHours(repository.countErrorsByHour(from, to));
+
+        List<ApiUsageResponseDTO> topApis = repository.topApis(from, to, 5).stream().map(row -> new ApiUsageResponseDTO((String) row[0], ((Number) row[1]).longValue())).toList();
+        List<ClientUsageResponseDTO> topClients = repository.topClients(from, to, 5).stream().map(row -> new ClientUsageResponseDTO(((Number) row[0]).longValue(), (String) row[1], ((Number) row[2]).longValue())).toList();
+
+        RequestDashboardResponseDTO result = new RequestDashboardResponseDTO(totalRequests, todayRequests, errors, average == null ? 0L : Math.round(average), requestsByHour, errorsByHour, topApis, topClients);
+
+        LOG.info("OK -- RequestLogService -- dashboard -- totalRequests={} -- todayRequests={} -- errors={}", totalRequests, todayRequests, errors);
+        return result;
+    }
+
+    private List<HourlyMetricResponseDTO> completeHours(List<Object[]> rows) {
+        List<HourlyMetricResponseDTO> result = new ArrayList<>();
+        for (int hour = 0; hour < 24; hour++) {
+            int currentHour = hour;
+            long count = rows.stream().filter(row -> ((Number) row[0]).intValue() == currentHour).map(row -> ((Number) row[1]).longValue()).findFirst().orElse(0L);
+            result.add(new HourlyMetricResponseDTO(hour, count));
+        }
         return result;
     }
 

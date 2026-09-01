@@ -1,6 +1,7 @@
 package com.api.gateway.requests.service.controller;
 
 import com.api.gateway.requests.service.dto.request.RequestLogRequestDTO;
+import com.api.gateway.requests.service.dto.response.RequestDashboardResponseDTO;
 import com.api.gateway.requests.service.dto.response.RequestLogResponseDTO;
 import com.api.gateway.requests.service.logic.RequestLogService;
 import jakarta.validation.Valid;
@@ -36,5 +37,11 @@ public class RequestLogController {
         LOG.info("ENTRY -- RequestLogController -- find -- clientId={} -- apiCode={} -- statusCode={}", clientId, apiCode, statusCode);
 
         return service.find(clientId, apiCode, statusCode, page, size);
+    }
+
+    @GetMapping("/request-logs/dashboard")
+    public RequestDashboardResponseDTO dashboard() {
+        LOG.info("ENTRY -- RequestLogController -- dashboard");
+        return service.dashboard();
     }
 }
