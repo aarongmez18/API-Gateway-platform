@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
-import { PageResponse, RequestLog } from '../models/request-log.model';
+import { PageResponse, RequestDashboard, RequestLog } from '../models/request-log.model';
 
 export interface RequestLogFilters {
   clientId?: number | null;
@@ -24,4 +24,6 @@ export class RequestLogService {
     if (filters.statusCode != null) params = params.set('statusCode', filters.statusCode);
     return this.http.get<PageResponse<RequestLog>>(this.url, { params });
   }
+
+  dashboard(): Observable<RequestDashboard> { return this.http.get<RequestDashboard>(`${this.url}/dashboard`); }
 }

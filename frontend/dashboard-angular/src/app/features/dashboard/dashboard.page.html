@@ -1,11 +1,11 @@
 <section class="page">
   <header class="page-header">
     <div>
-      <span class="eyebrow">Control plane / overview</span>
+      <span class="eyebrow">Observability / overview</span>
       <h1>Dashboard</h1>
-      <p>Visión operativa de las APIs, clientes y credenciales registradas en la plataforma.</p>
+      <p>Visión operativa del tráfico procesado por el Gateway durante el día de hoy.</p>
     </div>
-    <button class="btn" type="button" (click)="load()">↻ Actualizar</button>
+    <button class="btn" type="button" (click)="load()" [disabled]="loading()">↻ Actualizar</button>
   </header>
 
   @if (error()) {
@@ -13,54 +13,53 @@
   }
 
   <div class="stats-grid">
-    <app-stat-card label="APIs registradas" [value]="apis().length" [helper]="activeApis() + ' activas'" />
-    <app-stat-card label="Clientes" [value]="clients().length" [helper]="activeClients() + ' activos'" />
-    <app-stat-card label="API Keys" [value]="apiKeyCount()" helper="credenciales registradas" />
-    <app-stat-card label="Peticiones" [value]="requestCount()" helper="registradas por el Gateway" />
+    <app-stat-card label="Peticiones totales" [value]="dashboard()?.totalRequests ?? 0" helper="histórico registrado" />
+    <app-stat-card label="Peticiones de hoy" [value]="dashboard()?.todayRequests ?? 0" helper="procesadas hoy" />
+    <app-stat-card label="Errores" [value]="dashboard()?.errors ?? 0" helper="HTTP ≥ 400 hoy" />
+    <app-stat-card label="APIs activas" [value]="activeApis()" helper="disponibles" />
+    <app-stat-card label="Clientes activos" [value]="activeClients()" helper="consumidores habilitados" />
+    <app-stat-card label="Tiempo medio" [value]="(dashboard()?.averageResponseTimeMs ?? 0) + ' ms'" helper="respuesta media hoy" />
   </div>
 
-  <div class="dashboard-grid">
-    <section class="panel">
-      <div class="panel-head">
-        <h2>APIs recientes</h2>
-        <span>{{ apis().length }} total</span>
-      </div>
-      @if (loading()) {
-        <div class="loading">Cargando APIs...</div>
-      } @else {
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>API</th><th>Path</th><th>Estado</th></tr></thead>
-            <tbody>
-              @for (api of apis().slice(0, 6); track api.id) {
-                <tr>
-                  <td><span class="cell-primary">{{ api.name }}</span><span class="cell-secondary">#{{ api.id }}</span></td>
-                  <td class="mono">{{ api.path }}</td>
-                  <td><span class="badge" [class.active]="api.active" [class.inactive]="!api.active">{{ api.active ? 'Activa' : 'Inactiva' }}</span></td>
-                </tr>
-              }
-            </tbody>
-          </table>
+  @if (loading()) {
+    <div class="loading">Cargando métricas...</div>
+  } @else {
+    <div class="charts-grid">
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <div><h2>Peticiones por hora</h2><span>Tráfico de hoy</span></div>
         </div>
-      }
-    </section>
+        <div echarts [options]="requestsByHourChart()" class="chart"></div>
+      </section>
 
-    <section class="panel topology">
-      <div class="panel-head"><h2>Topología</h2><span>local</span></div>
-      <div class="topology-body">
-        <div class="node gateway-node"><small>ENTRY</small><strong>Gateway</strong><span>:9000</span></div>
-        <div class="connector"></div>
-          <div class="node-grid">
-            <div class="node"><small>SERVICE</small><strong>products-service</strong><span>:8081</span></div>
-            <div class="node"><small>SERVICE</small><strong>users-service</strong><span>:8082</span></div>
-            <div class="node"><small>SERVICE</small><strong>model-service</strong><span>:8083</span></div>
-            <div class="node"><small>SERVICE</small><strong>protected-service</strong><span>:8084</span></div>
-            <div class="node"><small>SERVICE</small><strong>requests-service</strong><span>:8085</span></div>
-            <div class="node"><small>DATABASE</small><strong>PostgreSQL</strong><span>:5432</span></div>
-            <div class="node"><small>CACHE</small><strong>Redis</strong><span>:6379</span></div>
-            <div class="node"><small>IDENTITY</small><strong>Keycloak</strong><span>:8080</span></div>
-          </div>
-      </div>
-    </section>
-  </div>
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <div><h2>Errores por hora</h2><span>HTTP ≥ 400</span></div>
+        </div>
+        <div echarts [options]="errorsByHourChart()" class="chart"></div>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <div><h2>APIs más utilizadas</h2><span>Top 5 de hoy</span></div>
+        </div>
+        @if ((dashboard()?.topApis?.length ?? 0) === 0) {
+          <div class="chart-empty">No hay actividad registrada hoy.</div>
+        } @else {
+          <div echarts [options]="topApisChart()" class="chart"></div>
+        }
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <div><h2>Clientes con más peticiones</h2><span>Top 5 de hoy</span></div>
+        </div>
+        @if ((dashboard()?.topClients?.length ?? 0) === 0) {
+          <div class="chart-empty">No hay clientes con actividad registrada hoy.</div>
+        } @else {
+          <div echarts [options]="topClientsChart()" class="chart"></div>
+        }
+      </section>
+    </div>
+  }
 </section>
