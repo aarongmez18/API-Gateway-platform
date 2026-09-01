@@ -37,6 +37,9 @@ spring:
               predicates:
                 - Path=/api-protected-management/**
               filters:
+                - name: RequestLogging
+                  args:
+                    apiCode: apis-management
                 - ApiKeyAuthentication
                 - name: ApiPermission
                   args:
@@ -48,6 +51,12 @@ spring:
               uri: http://localhost:8083
               predicates:
                 - Path=/model-management/api/model/**
+
+
+            - id: requests-management
+              uri: http://localhost:8085
+              predicates:
+                - Path=/requests-management/request-logs,/requests-management/request-logs/**
 
 server:
   port: 9000
