@@ -22,8 +22,8 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/api-protected-management/**").permitAll()
-                        .pathMatchers(HttpMethod.GET, "/api-management/**", "/users-management/**", "/model-management/**", "/requests-management/**").hasAnyRole("ADMIN", "USER")
-                        .pathMatchers("/api-management/**", "/users-management/**", "/model-management/**", "/requests-management/**").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.GET, "/api-management/**", "/users-management/**", "/requests-management/**").hasAnyRole("ADMIN", "USER")
+                        .pathMatchers("/api-management/**", "/users-management/**", "/requests-management/**").hasRole("ADMIN")
                         .anyExchange().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))

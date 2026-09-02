@@ -9,12 +9,12 @@
     "secure": false,
     "changeOrigin": true
   },
-  "/model-management/**": {
+  "/requests-management/**": {
     "target": "http://localhost:9000",
     "secure": false,
     "changeOrigin": true
   },
-  "/requests-management/**": {
+  "/api-protected-management/**": {
     "target": "http://localhost:9000",
     "secure": false,
     "changeOrigin": true

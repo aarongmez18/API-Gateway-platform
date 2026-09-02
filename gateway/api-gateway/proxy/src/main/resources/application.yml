@@ -43,11 +43,6 @@ spring:
                     apiCode: apis-management
                 - RateLimit
 
-            - id: model-management
-              uri: ${MODEL_SERVICE_URL:http://localhost:8083}
-              predicates:
-                - Path=/model-management/api/model/**
-
             - id: requests-management
               uri: ${REQUESTS_SERVICE_URL:http://localhost:8085}
               predicates:
