@@ -1,5 +1,7 @@
 # API Gateway Platform
 
+![CI](https://github.com/aarongmez18/API-Gateway-platform/actions/workflows/ci.yml/badge.svg)
+
 Plataforma full stack para gestionar, securizar y monitorizar el acceso a APIs mediante un API Gateway.
 
 El proyecto implementa una arquitectura basada en microservicios donde el Gateway actúa como punto de entrada único y centraliza autenticación mediante API Keys, autorización por permisos, rate limiting distribuido, seguridad OAuth2/OIDC y registro de peticiones. Incluye además un dashboard Angular para administrar clientes, APIs, credenciales, permisos y métricas.
