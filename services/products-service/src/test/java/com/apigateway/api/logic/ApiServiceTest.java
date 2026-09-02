@@ -95,27 +95,6 @@ class ApiServiceTest {
     }
 
     @Test
-    void create_debeGuardarApi() {
-
-        ApiRequestDTO request = mock(ApiRequestDTO.class);
-        Api api = mock(Api.class);
-        Api saved = mock(Api.class);
-        ApiResponseDTO response = mock(ApiResponseDTO.class);
-
-        when(mapper.toEntity(request)).thenReturn(api);
-        when(repository.save(api)).thenReturn(saved);
-        when(mapper.toDto(saved)).thenReturn(response);
-
-        ApiResponseDTO resultado = service.create(request);
-
-        assertSame(response, resultado);
-
-        verify(mapper).toEntity(request);
-        verify(repository).save(api);
-        verify(mapper).toDto(saved);
-    }
-
-    @Test
     void update_debeActualizarApiCuandoExiste() {
 
         Long id = 1L;

@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.apigateway.api.logic.ApiServiceTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.389 s <<< FAILURE! -- in com.apigateway.api.logic.ApiServiceTest
+com.apigateway.api.logic.ApiServiceTest.create_debeGuardarApi -- Time elapsed: 0.078 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "java.lang.CharSequence.toString()" because "src" is null
+	at java.base/java.text.Normalizer.normalize(Normalizer.java:161)
+	at com.apigateway.api.logic.ApiService.generateCode(ApiService.java:94)
+	at com.apigateway.api.logic.ApiService.generateUniqueCode(ApiService.java:82)
+	at com.apigateway.api.logic.ApiService.create(ApiService.java:49)
+	at com.apigateway.api.logic.ApiServiceTest.create_debeGuardarApi(ApiServiceTest.java:109)
+
