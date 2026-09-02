@@ -1,0 +1,106 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: gateway_dashboard
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d gateway_dashboard"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+      redis:
+        image: redis:8-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DB_URL: jdbc:postgresql://localhost:5432/gateway_dashboard
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/api-gateway-platform
+      KEYCLOAK_JWK_SET_URI: http://localhost:8080/realms/api-gateway-platform/protocol/openid-connect/certs
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Test database migrations
+        working-directory: services/management-service/model
+        run: mvn -B test
+
+      - name: Test products service
+        working-directory: services/products-service
+        run: mvn -B test
+
+      - name: Test users service
+        working-directory: services/users-service
+        run: mvn -B test
+
+      - name: Test requests service
+        working-directory: services/requests-service
+        run: mvn -B test
+
+      - name: Test protected service
+        working-directory: services/protected-service/management
+        run: mvn -B test
+
+      - name: Test gateway
+        working-directory: gateway/api-gateway/proxy
+        run: mvn -B test
+
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend/dashboard-angular
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/dashboard-angular/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular
+        run: npm run build
