@@ -1,4 +1,4 @@
-# API Gateway Platform
+# API Gateway Platform.
 
 ![CI](https://github.com/aarongmez18/API-Gateway-platform/actions/workflows/ci.yml/badge.svg)
 
