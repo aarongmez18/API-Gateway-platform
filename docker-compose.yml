@@ -10,6 +10,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   redis:
     image: redis:8-alpine
@@ -18,11 +23,10 @@ services:
       - "6379:6379"
     restart: unless-stopped
 
-
   keycloak:
     image: quay.io/keycloak/keycloak:26.7.2
     container_name: keycloak-gateway
-    command: start-dev
+    command: start-dev --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
@@ -30,7 +34,115 @@ services:
       - "8080:8080"
     volumes:
       - keycloak_data:/opt/keycloak/data
+      - ./docker/keycloak/api-gateway-platform-realm.json:/opt/keycloak/data/import/api-gateway-platform-realm.json:ro
     restart: unless-stopped
+
+  model-migrations:
+    build:
+      context: ./services/management-service/model
+    image: api-gateway-model
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    command: ["--spring.main.web-application-type=none"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  products-service:
+    build:
+      context: ./services/products-service
+    image: api-gateway-products
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8081:8081"
+    depends_on:
+      model-migrations:
+        condition: service_completed_successfully
+
+  users-service:
+    build:
+      context: ./services/users-service
+    image: api-gateway-users
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8082:8082"
+    depends_on:
+      model-migrations:
+        condition: service_completed_successfully
+
+  protected-service:
+    build:
+      context: ./services/protected-service/management
+    image: api-gateway-protected
+    ports:
+      - "8084:8084"
+
+  requests-service:
+    build:
+      context: ./services/requests-service
+    image: api-gateway-requests
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/api-gateway-platform
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/api-gateway-platform/protocol/openid-connect/certs
+    ports:
+      - "8085:8085"
+    depends_on:
+      model-migrations:
+        condition: service_completed_successfully
+      keycloak:
+        condition: service_started
+
+  gateway:
+    build:
+      context: ./gateway/api-gateway/proxy
+    image: api-gateway-proxy
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PRODUCTS_SERVICE_URL: http://products-service:8081
+      USERS_SERVICE_URL: http://users-service:8082
+      PROTECTED_SERVICE_URL: http://protected-service:8084
+      REQUESTS_SERVICE_URL: http://requests-service:8085
+      KEYCLOAK_ISSUER_URI: http://localhost:8080/realms/api-gateway-platform
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/api-gateway-platform/protocol/openid-connect/certs
+    ports:
+      - "9000:9000"
+    depends_on:
+      redis:
+        condition: service_started
+      keycloak:
+        condition: service_started
+      products-service:
+        condition: service_started
+      users-service:
+        condition: service_started
+      protected-service:
+        condition: service_started
+      requests-service:
+        condition: service_started
+
+  angular:
+    build:
+      context: ./frontend/dashboard-angular
+    image: api-gateway-angular
+    container_name: angular-gateway
+    ports:
+      - "4200:80"
+    depends_on:
+      gateway:
+        condition: service_started
 
 volumes:
   postgres_data:

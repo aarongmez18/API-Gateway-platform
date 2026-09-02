@@ -4,36 +4,33 @@ spring:
 
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/api-gateway-platform
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/api-gateway-platform}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8080/realms/api-gateway-platform/protocol/openid-connect/certs}
 
   cloud:
     gateway:
       server:
         webflux:
           routes:
-
-            # Administración: NO API Key
             - id: api-management
-              uri: http://localhost:8081
+              uri: ${PRODUCTS_SERVICE_URL:http://localhost:8081}
               predicates:
                 - Path=/api-management/**
 
-            # Administración: NO API Key
             - id: users-management
-              uri: http://localhost:8082
+              uri: ${USERS_SERVICE_URL:http://localhost:8082}
               predicates:
                 - Path=/users-management/**
 
-            # API externa: SÍ API Key
             - id: protected-api-management
-              uri: http://localhost:8084
+              uri: ${PROTECTED_SERVICE_URL:http://localhost:8084}
               predicates:
                 - Path=/api-protected-management/**
               filters:
@@ -46,17 +43,21 @@ spring:
                     apiCode: apis-management
                 - RateLimit
 
-            # Administración: NO API Key
             - id: model-management
-              uri: http://localhost:8083
+              uri: ${MODEL_SERVICE_URL:http://localhost:8083}
               predicates:
                 - Path=/model-management/api/model/**
 
-
             - id: requests-management
-              uri: http://localhost:8085
+              uri: ${REQUESTS_SERVICE_URL:http://localhost:8085}
               predicates:
                 - Path=/requests-management/request-logs,/requests-management/request-logs/**
 
 server:
   port: 9000
+
+services:
+  users:
+    url: ${USERS_SERVICE_URL:http://localhost:8082}
+  requests:
+    url: ${REQUESTS_SERVICE_URL:http://localhost:8085}
