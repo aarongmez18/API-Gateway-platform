@@ -1,0 +1,1017 @@
+{
+  "info": {
+    "_postman_id": "a7341fed-9d07-4069-a762-0bc6894e2a98",
+    "name": "API Gateway Platform",
+    "description": "Colección para probar Clients, API Keys y APIs a través del Gateway.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45836157"
+  },
+  "item": [
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "GET - Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/clients",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "clients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Cliente por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/clients/{{clientId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "clients",
+                "{{clientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Crear cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.id) pm.collectionVariables.set('clientId', json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Test Client\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/clients",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "clients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Actualizar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Client Modificado\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/clients/{{clientId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "clients",
+                "{{clientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/clients/{{clientId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "clients",
+                "{{clientId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API Keys",
+      "item": [
+        {
+          "name": "GET - Listar API Keys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Validar API key",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "api_7OFDwDbnqBM7xzNsAflkibGgGgpJJM7XPexOQhMjbcE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys/validate",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys",
+                "validate"
+              ],
+              "query": [
+                {
+                  "key": "X-API-Key",
+                  "value": "api_7OFDwDbnqBM7xzNsAflkibGgGgpJJM7XPexOQhMjbqwq",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - API Key por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys/{{apiKeyId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys",
+                "{{apiKeyId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - API Keys por Client ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys/client/{{clientId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys",
+                "client",
+                "{{clientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Crear API Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.id) pm.collectionVariables.set('apiKeyId', json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": {{clientId}},\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Actualizar API Key",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": {{clientId}},\n  \"active\": false\n}"
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys/{{apiKeyId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys",
+                "{{apiKeyId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Eliminar API Key",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/api-keys/{{apiKeyId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "api-keys",
+                "{{apiKeyId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "APIs",
+      "item": [
+        {
+          "name": "GET - Listar APIs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/api-management/apis",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api-management",
+                "apis"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - API por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/api-management/apis/{{apiId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api-management",
+                "apis",
+                "{{apiId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Crear API",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.id) pm.collectionVariables.set('apiId', json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Products API\",\n  \"targetUrl\": \"http://localhost:8085\",\n  \"path\": \"/products/**\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/api-management/apis",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api-management",
+                "apis"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Actualizar API",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Products API V2\",\n  \"targetUrl\": \"http://localhost:8086\",\n  \"path\": \"/products/**\",\n  \"active\": true\n}"
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/api-management/apis/{{apiId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api-management",
+                "apis",
+                "{{apiId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Eliminar API",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/api-management/apis/{{apiId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api-management",
+                "apis",
+                "{{apiId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Protected APIs",
+      "item": [
+        {
+          "name": "GET - Who I am Controller",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "api_7OFDwDbnqBM7xzNsAflkibGgGgpJJM7XPexOQhMjbcE",
+                "type": "text"
+              },
+              {
+                "key": "X-Client-ID",
+                "value": "999999",
+                "type": "text"
+              },
+              {
+                "key": "X-Client-Name",
+                "value": "Hacker",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/api-protected-management/protected/whoami",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "api-protected-management",
+                "protected",
+                "whoami"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clients x APIs Permission",
+      "item": [
+        {
+          "name": "GET - Permission por Client ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/permissions/client/{{clientId}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "permissions",
+                "client",
+                "{{clientId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Permission Checking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/permissions/check?clientId=55&apiCode=apis-management",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "permissions",
+                "check"
+              ],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "55"
+                },
+                {
+                  "key": "apiCode",
+                  "value": "apis-management"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Eliminar Permission",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/permissions/client/{{clientId}}/api/{{apiCode}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "permissions",
+                "client",
+                "{{clientId}}",
+                "api",
+                "{{apiCode}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Permission Grants",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"clientId\": 55,\r\n  \"apiId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{gatewayUrl}}/users-management/permissions",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "users-management",
+                "permissions"
+              ],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "55",
+                  "disabled": true
+                },
+                {
+                  "key": "apiId",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Redis Lab",
+      "item": [
+        {
+          "name": "Guardar valor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redis-lab/client:55:name?value=Mobile App",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "redis-lab",
+                "client:55:name"
+              ],
+              "query": [
+                {
+                  "key": "value",
+                  "value": "Mobile App"
+                }
+              ]
+            },
+            "description": "Guarda client:55:name = Mobile App en Redis."
+          },
+          "response": []
+        },
+        {
+          "name": "Leer valor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redis-lab/client:55:name",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "redis-lab",
+                "client:55:name"
+              ]
+            },
+            "description": "Lee el valor de client:55:name."
+          },
+          "response": []
+        },
+        {
+          "name": "Incrementar contador",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redis-lab/counter/requests:mobile-app",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "redis-lab",
+                "counter",
+                "requests:mobile-app"
+              ]
+            },
+            "description": "Ejecuta INCR sobre requests:mobile-app."
+          },
+          "response": []
+        },
+        {
+          "name": "Asignar TTL",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redis-lab/expire/requests:mobile-app?seconds=30",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "redis-lab",
+                "expire",
+                "requests:mobile-app"
+              ],
+              "query": [
+                {
+                  "key": "seconds",
+                  "value": "30"
+                }
+              ]
+            },
+            "description": "Asigna 30 segundos de expiración al contador."
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar TTL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redis-lab/ttl/requests:mobile-app",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "redis-lab",
+                "ttl",
+                "requests:mobile-app"
+              ]
+            },
+            "description": "Consulta cuántos segundos de TTL quedan."
+          },
+          "response": []
+        },
+        {
+          "name": "Leer contador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redis-lab/requests:mobile-app",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "redis-lab",
+                "requests:mobile-app"
+              ]
+            },
+            "description": "Lee el valor actual del contador."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Request Logging",
+      "item": [
+        {
+          "name": "Protected API - Request Logging",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{apiKey}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/{{protectedPath}}",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "{{protectedPath}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Logs - Find All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/requests-management/request-logs?page=0&size=50",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "requests-management",
+                "request-logs"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Logs - Filter Client",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/requests-management/request-logs?clientId={{clientId}}&page=0&size=50",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "requests-management",
+                "request-logs"
+              ],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "{{clientId}}"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Logs - Filter API",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/requests-management/request-logs?apiCode={{apiCode}}&page=0&size=50",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "requests-management",
+                "request-logs"
+              ],
+              "query": [
+                {
+                  "key": "apiCode",
+                  "value": "{{apiCode}}"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Logs - Filter Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/requests-management/request-logs?statusCode={{statusCode}}&page=0&size=50",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "requests-management",
+                "request-logs"
+              ],
+              "query": [
+                {
+                  "key": "statusCode",
+                  "value": "{{statusCode}}"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Logs - Filter All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{bearerToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{gatewayUrl}}/requests-management/request-logs?clientId={{clientId}}&apiCode={{apiCode}}&statusCode={{statusCode}}&page=0&size=50",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "requests-management",
+                "request-logs"
+              ],
+              "query": [
+                {
+                  "key": "clientId",
+                  "value": "{{clientId}}"
+                },
+                {
+                  "key": "apiCode",
+                  "value": "{{apiCode}}"
+                },
+                {
+                  "key": "statusCode",
+                  "value": "{{statusCode}}"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Logs - Internal Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"clientId\":56,\"clientName\":\"Mobile App\",\"apiCode\":\"apis-management\",\"endpoint\":\"/api-protected-management/test\",\"method\":\"GET\",\"statusCode\":200,\"durationMs\":83,\"requestedAt\":\"2026-09-01T20:00:00+02:00\"}"
+            },
+            "url": {
+              "raw": "{{requestsServiceUrl}}/requests-management/internal/request-logs",
+              "host": [
+                "{{requestsServiceUrl}}"
+              ],
+              "path": [
+                "requests-management",
+                "internal",
+                "request-logs"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:9000"
+    },
+    {
+      "key": "clientId",
+      "value": "1"
+    },
+    {
+      "key": "apiKeyId",
+      "value": "1"
+    },
+    {
+      "key": "apiId",
+      "value": "1"
+    },
+    {
+      "key": "baseUrl",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
